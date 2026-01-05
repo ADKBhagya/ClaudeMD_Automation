@@ -8,7 +8,9 @@
       "priority": "High",
       "steps": [
         "Login with valid credentials",
-        "Click on Billing menu",
+        "Navigate to Dashboard",
+        "Close ChatBot",
+        "Navigate to Billing page",
         "Verify Billing page loads successfully"
       ],
       "expectedResult": "Billing page should be displayed with header and action buttons",
