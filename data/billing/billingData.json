@@ -1,0 +1,197 @@
+{
+  "newInvoice": {
+    "patientId": "PT12345",
+    "patientName": "John Doe",
+    "serviceDate": "2024-12-15",
+    "provider": "Dr. Smith",
+    "procedureCode": "99213",
+    "procedureDescription": "Office Visit - Established Patient",
+    "diagnosisCode": "I10",
+    "diagnosisDescription": "Essential Hypertension",
+    "chargeAmount": "150.00",
+    "insuranceCoverage": "120.00",
+    "patientResponsibility": "30.00",
+    "notes": "Regular checkup visit"
+  },
+  "payment": {
+    "invoiceNumber": "INV-001",
+    "paymentAmount": "30.00",
+    "paymentMethod": "Credit Card",
+    "cardNumber": "4111111111111111",
+    "cardHolderName": "John Doe",
+    "expiryDate": "12/25",
+    "cvv": "123",
+    "paymentDate": "2024-12-20",
+    "notes": "Full payment"
+  },
+  "insuranceClaim": {
+    "patientId": "PT12345",
+    "patientName": "John Doe",
+    "insuranceProvider": "Blue Cross",
+    "policyNumber": "BC123456789",
+    "claimDate": "2024-12-15",
+    "serviceDate": "2024-12-15",
+    "provider": "Dr. Smith",
+    "procedureCode": "99213",
+    "diagnosisCode": "I10",
+    "claimAmount": "150.00",
+    "status": "Submitted"
+  },
+  "paymentPlan": {
+    "patientId": "PT12345",
+    "totalAmount": "500.00",
+    "downPayment": "100.00",
+    "numberOfInstallments": "4",
+    "installmentAmount": "100.00",
+    "frequency": "Monthly",
+    "startDate": "2024-12-20",
+    "endDate": "2025-04-20",
+    "notes": "Agreed payment plan"
+  },
+  "adjustment": {
+    "invoiceNumber": "INV-001",
+    "adjustmentType": "Discount",
+    "adjustmentAmount": "20.00",
+    "reason": "Goodwill adjustment",
+    "approvedBy": "Manager",
+    "date": "2024-12-20"
+  },
+  "refund": {
+    "invoiceNumber": "INV-001",
+    "refundAmount": "50.00",
+    "refundMethod": "Original Payment Method",
+    "reason": "Overpayment",
+    "approvedBy": "Billing Manager",
+    "date": "2024-12-20"
+  },
+  "searchCriteria": [
+    {
+      "type": "Patient Name",
+      "value": "John Doe",
+      "expectedResults": "multiple"
+    },
+    {
+      "type": "Patient ID",
+      "value": "PT12345",
+      "expectedResults": "multiple"
+    },
+    {
+      "type": "Invoice Number",
+      "value": "INV-001",
+      "expectedResults": 1
+    },
+    {
+      "type": "Date Range",
+      "startDate": "2024-12-01",
+      "endDate": "2024-12-31",
+      "expectedResults": "multiple"
+    },
+    {
+      "type": "Provider",
+      "value": "Dr. Smith",
+      "expectedResults": "multiple"
+    }
+  ],
+  "filterOptions": {
+    "byStatus": ["Paid", "Unpaid", "Partial", "Overdue", "Cancelled"],
+    "byPaymentMethod": ["Cash", "Credit Card", "Debit Card", "Check", "Insurance"],
+    "byProvider": ["Dr. Smith", "Dr. Johnson", "Dr. Williams"],
+    "byDateRange": {
+      "today": "today",
+      "thisWeek": "this_week",
+      "thisMonth": "this_month",
+      "lastMonth": "last_month",
+      "custom": "custom_range"
+    },
+    "byAmount": {
+      "lessThan100": "< $100",
+      "between100And500": "$100 - $500",
+      "between500And1000": "$500 - $1000",
+      "greaterThan1000": "> $1000"
+    }
+  },
+  "invoiceStatuses": {
+    "paid": "Paid",
+    "unpaid": "Unpaid",
+    "partial": "Partial",
+    "overdue": "Overdue",
+    "cancelled": "Cancelled"
+  },
+  "claimStatuses": {
+    "submitted": "Submitted",
+    "pending": "Pending",
+    "approved": "Approved",
+    "denied": "Denied",
+    "paid": "Paid"
+  },
+  "paymentMethods": {
+    "cash": "Cash",
+    "creditCard": "Credit Card",
+    "debitCard": "Debit Card",
+    "check": "Check",
+    "insurance": "Insurance",
+    "paymentPlan": "Payment Plan"
+  },
+  "procedureCodes": {
+    "officeVisit": {
+      "code": "99213",
+      "description": "Office Visit - Established Patient",
+      "charge": "150.00"
+    },
+    "newPatientVisit": {
+      "code": "99203",
+      "description": "Office Visit - New Patient",
+      "charge": "200.00"
+    },
+    "labWork": {
+      "code": "80053",
+      "description": "Comprehensive Metabolic Panel",
+      "charge": "75.00"
+    },
+    "xray": {
+      "code": "71020",
+      "description": "Chest X-ray",
+      "charge": "125.00"
+    }
+  },
+  "diagnosisCodes": {
+    "hypertension": {
+      "code": "I10",
+      "description": "Essential Hypertension"
+    },
+    "diabetes": {
+      "code": "E11.9",
+      "description": "Type 2 Diabetes Mellitus"
+    },
+    "asthma": {
+      "code": "J45.909",
+      "description": "Unspecified Asthma"
+    }
+  },
+  "validationErrors": {
+    "emptyPatientId": "Patient ID is required",
+    "emptyServiceDate": "Service date is required",
+    "emptyProcedureCode": "Procedure code is required",
+    "emptyChargeAmount": "Charge amount is required",
+    "invalidAmount": "Invalid amount format",
+    "emptyPaymentMethod": "Payment method is required",
+    "insufficientPayment": "Payment amount exceeds invoice balance"
+  },
+  "reportTypes": {
+    "agingReport": "Aging Report",
+    "paymentReport": "Payment Report",
+    "claimsReport": "Claims Report",
+    "revenueReport": "Revenue Report",
+    "outstandingBalances": "Outstanding Balances",
+    "collectionReport": "Collection Report"
+  },
+  "tabs": {
+    "invoices": "Invoices",
+    "payments": "Payments",
+    "claims": "Claims",
+    "statements": "Statements",
+    "reports": "Reports",
+    "adjustments": "Adjustments",
+    "refunds": "Refunds"
+  }
+}
