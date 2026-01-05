@@ -1,0 +1,90 @@
+{
+  "newAppointment": {
+    "patientName": "John Doe",
+    "patientId": "PT12345",
+    "appointmentType": "Consultation",
+    "provider": "Dr. Smith",
+    "date": "2024-12-25",
+    "time": "10:00 AM",
+    "duration": "30 minutes",
+    "reason": "Regular checkup",
+    "notes": "Patient requested morning slot"
+  },
+  "editAppointment": {
+    "patientName": "Jane Smith",
+    "patientId": "PT12346",
+    "appointmentType": "Follow-up",
+    "provider": "Dr. Johnson",
+    "date": "2024-12-26",
+    "time": "02:00 PM",
+    "duration": "45 minutes",
+    "reason": "Post-surgery checkup",
+    "notes": "Updated appointment time"
+  },
+  "searchCriteria": [
+    {
+      "type": "Patient Name",
+      "value": "John Doe",
+      "expectedResults": 1
+    },
+    {
+      "type": "Patient ID",
+      "value": "PT12345",
+      "expectedResults": 1
+    },
+    {
+      "type": "Provider",
+      "value": "Dr. Smith",
+      "expectedResults": "multiple"
+    },
+    {
+      "type": "Date",
+      "value": "2024-12-25",
+      "expectedResults": "multiple"
+    },
+    {
+      "type": "Appointment Type",
+      "value": "Consultation",
+      "expectedResults": "multiple"
+    }
+  ],
+  "filterOptions": {
+    "byStatus": ["Scheduled", "Confirmed", "Completed", "Cancelled", "No-Show"],
+    "byProvider": ["Dr. Smith", "Dr. Johnson", "Dr. Williams"],
+    "byAppointmentType": ["Consultation", "Follow-up", "Emergency", "Procedure"],
+    "byDateRange": {
+      "today": "today",
+      "thisWeek": "this_week",
+      "thisMonth": "this_month",
+      "custom": "custom_range"
+    }
+  },
+  "appointmentStatuses": {
+    "scheduled": "Scheduled",
+    "confirmed": "Confirmed",
+    "completed": "Completed",
+    "cancelled": "Cancelled",
+    "noShow": "No-Show",
+    "rescheduled": "Rescheduled"
+  },
+  "validationErrors": {
+    "emptyPatientName": "Patient name is required",
+    "emptyProvider": "Provider is required",
+    "emptyDate": "Date is required",
+    "emptyTime": "Time is required",
+    "pastDate": "Cannot schedule appointment in the past",
+    "invalidTime": "Invalid time format"
+  },
+  "bulkActions": {
+    "confirmMultiple": "Confirm Selected",
+    "cancelMultiple": "Cancel Selected",
+    "rescheduleMultiple": "Reschedule Selected",
+    "deleteMultiple": "Delete Selected"
+  },
+  "viewOptions": {
+    "calendar": "Calendar View",
+    "list": "List View",
+    "timeline": "Timeline View",
+    "grid": "Grid View"
+  }
+}

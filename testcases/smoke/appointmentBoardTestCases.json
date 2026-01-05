@@ -1,0 +1,212 @@
+{
+  "module": "Appointment Board",
+  "type": "Smoke Tests",
+  "testCases": [
+    {
+      "id": "APPT_001",
+      "title": "Verify user can navigate to Appointment Board",
+      "priority": "High",
+      "steps": [
+        "Login with valid credentials",
+        "Navigate to Dashboard",
+        "Close ChatBot",
+        "Click on Appointment Board menu",
+        "Verify Appointment Board page loads successfully"
+      ],
+      "expectedResult": "Appointment Board page should be displayed with header and action buttons",
+      "testData": "none"
+    },
+    {
+      "id": "APPT_002",
+      "title": "Verify Appointment Board page elements are visible",
+      "priority": "High",
+      "steps": [
+        "Navigate to Appointment Board",
+        "Verify New Appointment button is visible",
+        "Verify Search input is visible",
+        "Verify Filter options are visible",
+        "Verify Appointment list/grid is visible"
+      ],
+      "expectedResult": "All Appointment Board page elements should be visible",
+      "testData": "none"
+    },
+    {
+      "id": "APPT_003",
+      "title": "Verify user can create a new appointment",
+      "priority": "High",
+      "steps": [
+        "Navigate to Appointment Board",
+        "Click New Appointment button",
+        "Fill in all required appointment details",
+        "Click Save button",
+        "Verify success message is displayed",
+        "Verify appointment appears in the list"
+      ],
+      "expectedResult": "New appointment should be created successfully",
+      "testData": "newAppointment"
+    },
+    {
+      "id": "APPT_004",
+      "title": "Verify user can search for appointments",
+      "priority": "High",
+      "steps": [
+        "Navigate to Appointment Board",
+        "Enter patient name in search field",
+        "Click Search button",
+        "Verify search results are displayed",
+        "Verify results match search criteria"
+      ],
+      "expectedResult": "Search should return matching appointments",
+      "testData": "searchCriteria[0]"
+    },
+    {
+      "id": "APPT_005",
+      "title": "Verify user can filter appointments by status",
+      "priority": "High",
+      "steps": [
+        "Navigate to Appointment Board",
+        "Select a status from status filter dropdown",
+        "Verify only appointments with selected status are displayed"
+      ],
+      "expectedResult": "Appointments should be filtered by selected status",
+      "testData": "appointmentStatuses.scheduled"
+    },
+    {
+      "id": "APPT_006",
+      "title": "Verify user can edit an appointment",
+      "priority": "High",
+      "steps": [
+        "Navigate to Appointment Board",
+        "Click Edit button on an existing appointment",
+        "Modify appointment details",
+        "Click Save button",
+        "Verify success message is displayed",
+        "Verify updated details are reflected"
+      ],
+      "expectedResult": "Appointment should be updated successfully",
+      "testData": "editAppointment"
+    },
+    {
+      "id": "APPT_007",
+      "title": "Verify user can delete an appointment",
+      "priority": "High",
+      "steps": [
+        "Navigate to Appointment Board",
+        "Click Delete button on an appointment",
+        "Confirm deletion in confirmation modal",
+        "Verify success message is displayed",
+        "Verify appointment is removed from the list"
+      ],
+      "expectedResult": "Appointment should be deleted successfully",
+      "testData": "none"
+    },
+    {
+      "id": "APPT_008",
+      "title": "Verify user can switch between different views",
+      "priority": "Medium",
+      "steps": [
+        "Navigate to Appointment Board",
+        "Click Calendar View button",
+        "Verify appointments are displayed in calendar format",
+        "Click List View button",
+        "Verify appointments are displayed in list format"
+      ],
+      "expectedResult": "User should be able to switch between different view modes",
+      "testData": "viewOptions"
+    },
+    {
+      "id": "APPT_009",
+      "title": "Verify user can confirm an appointment",
+      "priority": "Medium",
+      "steps": [
+        "Navigate to Appointment Board",
+        "Click Confirm button on a scheduled appointment",
+        "Verify appointment status changes to Confirmed",
+        "Verify success message is displayed"
+      ],
+      "expectedResult": "Appointment status should be updated to Confirmed",
+      "testData": "appointmentStatuses.confirmed"
+    },
+    {
+      "id": "APPT_010",
+      "title": "Verify user can cancel an appointment",
+      "priority": "Medium",
+      "steps": [
+        "Navigate to Appointment Board",
+        "Click Cancel button on an appointment",
+        "Confirm cancellation in confirmation modal",
+        "Verify appointment status changes to Cancelled",
+        "Verify success message is displayed"
+      ],
+      "expectedResult": "Appointment should be cancelled successfully",
+      "testData": "appointmentStatuses.cancelled"
+    },
+    {
+      "id": "APPT_011",
+      "title": "Verify user can reschedule an appointment",
+      "priority": "Medium",
+      "steps": [
+        "Navigate to Appointment Board",
+        "Click Reschedule button on an appointment",
+        "Select new date and time",
+        "Click Save button",
+        "Verify success message is displayed",
+        "Verify appointment shows updated date/time"
+      ],
+      "expectedResult": "Appointment should be rescheduled successfully",
+      "testData": "editAppointment"
+    },
+    {
+      "id": "APPT_012",
+      "title": "Verify validation for required fields",
+      "priority": "Medium",
+      "steps": [
+        "Navigate to Appointment Board",
+        "Click New Appointment button",
+        "Leave required fields empty",
+        "Click Save button",
+        "Verify validation errors are displayed"
+      ],
+      "expectedResult": "Validation errors should be displayed for required fields",
+      "testData": "validationErrors"
+    },
+    {
+      "id": "APPT_013",
+      "title": "Verify user can filter appointments by provider",
+      "priority": "Low",
+      "steps": [
+        "Navigate to Appointment Board",
+        "Select a provider from provider filter dropdown",
+        "Verify only appointments for selected provider are displayed"
+      ],
+      "expectedResult": "Appointments should be filtered by selected provider",
+      "testData": "filterOptions.byProvider"
+    },
+    {
+      "id": "APPT_014",
+      "title": "Verify user can refresh appointment list",
+      "priority": "Low",
+      "steps": [
+        "Navigate to Appointment Board",
+        "Click Refresh button",
+        "Verify appointment list is reloaded"
+      ],
+      "expectedResult": "Appointment list should be refreshed successfully",
+      "testData": "none"
+    },
+    {
+      "id": "APPT_015",
+      "title": "Verify user can clear search filters",
+      "priority": "Low",
+      "steps": [
+        "Navigate to Appointment Board",
+        "Apply search filters",
+        "Click Clear Search button",
+        "Verify all appointments are displayed",
+        "Verify filters are reset"
+      ],
+      "expectedResult": "Search filters should be cleared and all appointments displayed",
+      "testData": "none"
+    }
+  ]
+}
