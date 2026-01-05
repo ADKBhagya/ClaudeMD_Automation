@@ -1,0 +1,112 @@
+{
+  "module": "Login",
+  "type": "Smoke Tests",
+  "testCases": [
+    {
+      "id": "LOGIN_001",
+      "title": "Verify successful login with valid credentials",
+      "priority": "High",
+      "steps": [
+        "Navigate to login page",
+        "Enter valid username",
+        "Enter valid password",
+        "Click login button",
+        "Verify user is logged in successfully"
+      ],
+      "expectedResult": "User should be logged in and redirected to dashboard",
+      "testData": "validCredentials"
+    },
+    {
+      "id": "LOGIN_002",
+      "title": "Verify login page elements are visible",
+      "priority": "High",
+      "steps": [
+        "Navigate to login page",
+        "Verify username field is visible",
+        "Verify password field is visible",
+        "Verify login button is visible",
+        "Verify logo is visible"
+      ],
+      "expectedResult": "All login page elements should be visible",
+      "testData": "none"
+    },
+    {
+      "id": "LOGIN_003",
+      "title": "Verify login fails with invalid username",
+      "priority": "High",
+      "steps": [
+        "Navigate to login page",
+        "Enter invalid username",
+        "Enter valid password",
+        "Click login button",
+        "Verify error message is displayed"
+      ],
+      "expectedResult": "Login should fail and display appropriate error message",
+      "testData": "invalidCredentials[0]"
+    },
+    {
+      "id": "LOGIN_004",
+      "title": "Verify login fails with invalid password",
+      "priority": "High",
+      "steps": [
+        "Navigate to login page",
+        "Enter valid username",
+        "Enter invalid password",
+        "Click login button",
+        "Verify error message is displayed"
+      ],
+      "expectedResult": "Login should fail and display appropriate error message",
+      "testData": "invalidCredentials[1]"
+    },
+    {
+      "id": "LOGIN_005",
+      "title": "Verify login fails with empty username",
+      "priority": "Medium",
+      "steps": [
+        "Navigate to login page",
+        "Leave username field empty",
+        "Enter valid password",
+        "Click login button",
+        "Verify validation error is displayed"
+      ],
+      "expectedResult": "Login should fail and display required field error",
+      "testData": "invalidCredentials[2]"
+    },
+    {
+      "id": "LOGIN_006",
+      "title": "Verify login fails with empty password",
+      "priority": "Medium",
+      "steps": [
+        "Navigate to login page",
+        "Enter valid username",
+        "Leave password field empty",
+        "Click login button",
+        "Verify validation error is displayed"
+      ],
+      "expectedResult": "Login should fail and display required field error",
+      "testData": "invalidCredentials[3]"
+    },
+    {
+      "id": "LOGIN_007",
+      "title": "Verify login button state",
+      "priority": "Low",
+      "steps": [
+        "Navigate to login page",
+        "Verify login button is enabled/disabled based on form validation"
+      ],
+      "expectedResult": "Login button state should reflect form validation",
+      "testData": "none"
+    },
+    {
+      "id": "LOGIN_008",
+      "title": "Verify login page title",
+      "priority": "Low",
+      "steps": [
+        "Navigate to login page",
+        "Verify page title is correct"
+      ],
+      "expectedResult": "Page title should be 'ClaudeMD - Login' or similar",
+      "testData": "none"
+    }
+  ]
+}

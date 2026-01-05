@@ -1,0 +1,39 @@
+{
+  "validCredentials": {
+    "username": "GALEN",
+    "password": "Password1!"
+  },
+  "invalidCredentials": [
+    {
+      "scenario": "Invalid username",
+      "username": "INVALID_USER",
+      "password": "Password1!",
+      "expectedError": "Invalid credentials"
+    },
+    {
+      "scenario": "Invalid password",
+      "username": "GALEN",
+      "password": "WrongPassword",
+      "expectedError": "Invalid credentials"
+    },
+    {
+      "scenario": "Empty username",
+      "username": "",
+      "password": "Password1!",
+      "expectedError": "Username is required"
+    },
+    {
+      "scenario": "Empty password",
+      "username": "GALEN",
+      "password": "",
+      "expectedError": "Password is required"
+    }
+  ],
+  "testUsers": [
+    {
+      "role": "admin",
+      "username": "GALEN",
+      "password": "Password1!"
+    }
+  ]
+}
