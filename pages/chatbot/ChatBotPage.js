@@ -7,9 +7,8 @@ class ChatBotPage extends BasePage {
     // ChatBot Container
     this.chatBotContainer = 'xpath=/html/body/div/div/div';
 
-    // ChatBot Close Buttons
-    this.chatBotCloseButton = 'xpath=/html/body/div/div/div/button';
-    this.chatBotCloseButtonAlt = 'xpath=/html/body/div/div/div/div/div/div[1]/div[2]/button[4]/svg';
+    // ChatBot Close Button
+    this.chatBotCloseButton = 'xpath=/html/body/div/div/div/div/div/div[1]/div[2]/button[4]/svg';
 
     // ChatBot Header Elements
     this.chatBotHeader = 'xpath=/html/body/div/div/div/div/div/div[1]';
@@ -40,27 +39,16 @@ class ChatBotPage extends BasePage {
 
   async closeChatBot() {
     try {
-      // Try primary close button first
-      const primaryButton = this.page.locator(this.chatBotCloseButton);
-      if (await primaryButton.isVisible({ timeout: 5000 })) {
-        await primaryButton.click();
+      const closeButton = this.page.locator(this.chatBotCloseButton);
+      if (await closeButton.isVisible({ timeout: 5000 })) {
+        await closeButton.click();
         await this.waitForTimeout(1000);
         return true;
       }
     } catch (e) {
-      // If primary button not found, try alternative close button
-      try {
-        const altButton = this.page.locator(this.chatBotCloseButtonAlt);
-        if (await altButton.isVisible({ timeout: 5000 })) {
-          await altButton.click();
-          await this.waitForTimeout(1000);
-          return true;
-        }
-      } catch (error) {
-        // ChatBot may not be visible
-        console.log('ChatBot close button not found or already closed');
-        return false;
-      }
+      // ChatBot may not be visible
+      console.log('ChatBot close button not found or already closed');
+      return false;
     }
     return false;
   }
