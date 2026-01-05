@@ -6,3 +6,5 @@ playwright-report/
 .env
 *.log
 package-lock.json
+.claude/
+*.png
