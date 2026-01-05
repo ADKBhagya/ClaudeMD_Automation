@@ -1,0 +1,8 @@
+node_modules/
+test-results/
+reports/
+videos/
+playwright-report/
+.env
+*.log
+package-lock.json

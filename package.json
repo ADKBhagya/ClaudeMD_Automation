@@ -1,0 +1,32 @@
+{
+  "name": "automateai",
+  "version": "1.0.0",
+  "description": "## Overview Page Object Model automation framework for ClaudeMD application using Playwright and JavaScript.",
+  "main": "index.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "playwright test",
+    "test:headed": "playwright test --headed",
+    "test:debug": "playwright test --debug",
+    "test:login": "playwright test tests/login/",
+    "test:appointmentBoard": "playwright test tests/appointmentBoard/",
+    "test:pmBoard": "playwright test tests/pmBoard/",
+    "test:billing": "playwright test tests/billing/",
+    "test:smoke": "playwright test tests/smoke/",
+    "test:chromium": "playwright test --project=chromium",
+    "test:firefox": "playwright test --project=firefox",
+    "test:webkit": "playwright test --project=webkit",
+    "report": "playwright show-report reports",
+    "test:ui": "playwright test --ui"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@playwright/test": "^1.57.0",
+    "dotenv": "^17.2.3",
+    "playwright": "^1.57.0"
+  }
+}
