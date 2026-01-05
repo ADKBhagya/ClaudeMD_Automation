@@ -1,0 +1,138 @@
+{
+  "module": "ChatBot",
+  "type": "Smoke Tests",
+  "testCases": [
+    {
+      "id": "CHAT_001",
+      "title": "Verify ChatBot appears on Dashboard",
+      "priority": "High",
+      "steps": [
+        "Login with valid credentials",
+        "Navigate to Dashboard",
+        "Verify ChatBot is visible on the page"
+      ],
+      "expectedResult": "ChatBot should be displayed on Dashboard",
+      "testData": "none"
+    },
+    {
+      "id": "CHAT_002",
+      "title": "Verify user can close ChatBot",
+      "priority": "High",
+      "steps": [
+        "Navigate to Dashboard",
+        "Verify ChatBot is visible",
+        "Click ChatBot close button",
+        "Verify ChatBot is closed/hidden"
+      ],
+      "expectedResult": "ChatBot should be closed successfully",
+      "testData": "none"
+    },
+    {
+      "id": "CHAT_003",
+      "title": "Verify ChatBot close button is visible",
+      "priority": "High",
+      "steps": [
+        "Navigate to Dashboard",
+        "Verify ChatBot is visible",
+        "Verify close button is visible"
+      ],
+      "expectedResult": "ChatBot close button should be visible",
+      "testData": "none"
+    },
+    {
+      "id": "CHAT_004",
+      "title": "Verify user can minimize ChatBot",
+      "priority": "Medium",
+      "steps": [
+        "Navigate to Dashboard",
+        "Verify ChatBot is visible",
+        "Click minimize button",
+        "Verify ChatBot is minimized"
+      ],
+      "expectedResult": "ChatBot should be minimized successfully",
+      "testData": "none"
+    },
+    {
+      "id": "CHAT_005",
+      "title": "Verify user can maximize ChatBot",
+      "priority": "Medium",
+      "steps": [
+        "Navigate to Dashboard",
+        "Minimize ChatBot",
+        "Click maximize button",
+        "Verify ChatBot is maximized"
+      ],
+      "expectedResult": "ChatBot should be maximized successfully",
+      "testData": "none"
+    },
+    {
+      "id": "CHAT_006",
+      "title": "Verify user can send message to ChatBot",
+      "priority": "Medium",
+      "steps": [
+        "Navigate to Dashboard",
+        "Verify ChatBot is visible",
+        "Enter a message in chat input",
+        "Click send button",
+        "Verify message is sent"
+      ],
+      "expectedResult": "Message should be sent successfully",
+      "testData": "testMessages[0]"
+    },
+    {
+      "id": "CHAT_007",
+      "title": "Verify ChatBot responds to messages",
+      "priority": "Medium",
+      "steps": [
+        "Navigate to Dashboard",
+        "Send a greeting message",
+        "Wait for response",
+        "Verify ChatBot responds"
+      ],
+      "expectedResult": "ChatBot should respond to messages",
+      "testData": "testMessages[0]"
+    },
+    {
+      "id": "CHAT_008",
+      "title": "Verify user can refresh ChatBot",
+      "priority": "Low",
+      "steps": [
+        "Navigate to Dashboard",
+        "Verify ChatBot is visible",
+        "Click refresh button",
+        "Verify ChatBot is refreshed"
+      ],
+      "expectedResult": "ChatBot should be refreshed successfully",
+      "testData": "none"
+    },
+    {
+      "id": "CHAT_009",
+      "title": "Verify ChatBot persists across page navigation",
+      "priority": "Low",
+      "steps": [
+        "Navigate to Dashboard",
+        "Verify ChatBot is visible",
+        "Navigate to another page",
+        "Verify ChatBot state is maintained"
+      ],
+      "expectedResult": "ChatBot state should persist across navigation",
+      "testData": "none"
+    },
+    {
+      "id": "CHAT_010",
+      "title": "Verify ChatBot UI elements are visible",
+      "priority": "Medium",
+      "steps": [
+        "Navigate to Dashboard",
+        "Verify ChatBot is visible",
+        "Verify header is visible",
+        "Verify close button is visible",
+        "Verify minimize button is visible",
+        "Verify input field is visible",
+        "Verify send button is visible"
+      ],
+      "expectedResult": "All ChatBot UI elements should be visible",
+      "testData": "none"
+    }
+  ]
+}

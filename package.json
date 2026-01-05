@@ -11,6 +11,7 @@
     "test:headed": "playwright test --headed",
     "test:debug": "playwright test --debug",
     "test:login": "playwright test tests/login/",
+    "test:chatbot": "playwright test tests/chatbot/",
     "test:appointmentBoard": "playwright test tests/appointmentBoard/",
     "test:pmBoard": "playwright test tests/pmBoard/",
     "test:billing": "playwright test tests/billing/",

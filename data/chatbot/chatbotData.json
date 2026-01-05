@@ -1,0 +1,32 @@
+{
+  "testMessages": [
+    {
+      "type": "greeting",
+      "message": "Hello"
+    },
+    {
+      "type": "help",
+      "message": "I need help"
+    },
+    {
+      "type": "question",
+      "message": "How can I schedule an appointment?"
+    },
+    {
+      "type": "feedback",
+      "message": "Thank you for your help"
+    }
+  ],
+  "expectedResponses": {
+    "greeting": "Hi! How can I help you today?",
+    "help": "I'm here to assist you",
+    "question": "Let me help you with that",
+    "default": "I understand"
+  },
+  "chatbotSettings": {
+    "defaultPosition": "bottom-right",
+    "theme": "light",
+    "autoOpen": true,
+    "responseDelay": 1000
+  }
+}

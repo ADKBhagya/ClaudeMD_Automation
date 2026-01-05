@@ -1,12 +1,12 @@
 const BasePage = require('../common/BasePage');
+const ChatBotPage = require('../chatbot/ChatBotPage');
 
 class AppointmentBoardPage extends BasePage {
   constructor(page) {
     super(page);
 
-    // ChatBot elements
-    this.chatBotCloseButton = 'xpath=/html/body/div/div/div/button';
-    this.chatBotCloseButtonAlt = 'xpath=/html/body/div/div/div/div/div/div[1]/div[2]/button[4]/svg';
+    // Initialize ChatBotPage
+    this.chatBot = new ChatBotPage(page);
 
     // Navigation
     this.appointmentBoardMenu = '#appointmentBoardMenu';
@@ -85,38 +85,14 @@ class AppointmentBoardPage extends BasePage {
     this.pageNumberInput = '#pageNumber';
   }
 
-  async closeChatBot() {
-    try {
-      // Try primary close button first
-      const primaryButton = this.page.locator(this.chatBotCloseButton);
-      if (await primaryButton.isVisible({ timeout: 5000 })) {
-        await primaryButton.click();
-        await this.waitForTimeout(1000);
-        return;
-      }
-    } catch (e) {
-      // If primary button not found, try alternative close button
-      try {
-        const altButton = this.page.locator(this.chatBotCloseButtonAlt);
-        if (await altButton.isVisible({ timeout: 5000 })) {
-          await altButton.click();
-          await this.waitForTimeout(1000);
-        }
-      } catch (error) {
-        // ChatBot may not be visible, continue
-        console.log('ChatBot close button not found or already closed');
-      }
-    }
-  }
-
   async navigateToAppointmentBoard() {
     // Navigate to Dashboard first
     const dashboardURL = process.env.DASHBOARD_URL;
     await this.page.goto(dashboardURL, { timeout: 60000, waitUntil: 'domcontentloaded' });
     await this.waitForTimeout(2000);
 
-    // Close ChatBot if visible
-    await this.closeChatBot();
+    // Close ChatBot if visible using ChatBotPage
+    await this.chatBot.closeChatBot();
 
     // Navigate to Appointment Board
     const appointmentBoardURL = process.env.APPOINTMENT_BOARD_URL;
