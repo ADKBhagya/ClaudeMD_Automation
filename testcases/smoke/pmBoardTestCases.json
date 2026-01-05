@@ -1,0 +1,283 @@
+{
+  "module": "PM Board",
+  "type": "Smoke Tests",
+  "testCases": [
+    {
+      "id": "PM_001",
+      "title": "Verify user can navigate to PM Board",
+      "priority": "High",
+      "steps": [
+        "Login with valid credentials",
+        "Click on PM Board menu",
+        "Verify PM Board page loads successfully"
+      ],
+      "expectedResult": "PM Board page should be displayed with header and action buttons",
+      "testData": "none"
+    },
+    {
+      "id": "PM_002",
+      "title": "Verify PM Board page elements are visible",
+      "priority": "High",
+      "steps": [
+        "Navigate to PM Board",
+        "Verify New Patient button is visible",
+        "Verify Search input is visible",
+        "Verify Filter options are visible",
+        "Verify Patient list/grid is visible"
+      ],
+      "expectedResult": "All PM Board page elements should be visible",
+      "testData": "none"
+    },
+    {
+      "id": "PM_003",
+      "title": "Verify user can create a new patient",
+      "priority": "High",
+      "steps": [
+        "Navigate to PM Board",
+        "Click New Patient button",
+        "Fill in all required patient demographics",
+        "Fill in insurance information",
+        "Click Save button",
+        "Verify success message is displayed",
+        "Verify patient appears in the list"
+      ],
+      "expectedResult": "New patient should be created successfully",
+      "testData": "newPatient"
+    },
+    {
+      "id": "PM_004",
+      "title": "Verify user can search for patients",
+      "priority": "High",
+      "steps": [
+        "Navigate to PM Board",
+        "Enter patient name in search field",
+        "Click Search button",
+        "Verify search results are displayed",
+        "Verify results match search criteria"
+      ],
+      "expectedResult": "Search should return matching patients",
+      "testData": "searchCriteria[0]"
+    },
+    {
+      "id": "PM_005",
+      "title": "Verify user can filter patients by status",
+      "priority": "High",
+      "steps": [
+        "Navigate to PM Board",
+        "Select a status from status filter dropdown",
+        "Verify only patients with selected status are displayed"
+      ],
+      "expectedResult": "Patients should be filtered by selected status",
+      "testData": "patientStatuses.active"
+    },
+    {
+      "id": "PM_006",
+      "title": "Verify user can edit a patient",
+      "priority": "High",
+      "steps": [
+        "Navigate to PM Board",
+        "Click Edit button on an existing patient",
+        "Modify patient details",
+        "Click Save button",
+        "Verify success message is displayed",
+        "Verify updated details are reflected"
+      ],
+      "expectedResult": "Patient should be updated successfully",
+      "testData": "editPatient"
+    },
+    {
+      "id": "PM_007",
+      "title": "Verify user can delete a patient",
+      "priority": "High",
+      "steps": [
+        "Navigate to PM Board",
+        "Click Delete button on a patient",
+        "Confirm deletion in confirmation modal",
+        "Verify success message is displayed",
+        "Verify patient is removed from the list"
+      ],
+      "expectedResult": "Patient should be deleted successfully",
+      "testData": "none"
+    },
+    {
+      "id": "PM_008",
+      "title": "Verify user can view patient details",
+      "priority": "High",
+      "steps": [
+        "Navigate to PM Board",
+        "Click View button on a patient",
+        "Verify patient details page opens",
+        "Verify all tabs are accessible"
+      ],
+      "expectedResult": "Patient details should be displayed with all tabs",
+      "testData": "tabs"
+    },
+    {
+      "id": "PM_009",
+      "title": "Verify user can add medical records",
+      "priority": "Medium",
+      "steps": [
+        "Navigate to PM Board",
+        "Open a patient record",
+        "Click Medical History tab",
+        "Add diagnosis, medications, and allergies",
+        "Click Save button",
+        "Verify medical records are saved"
+      ],
+      "expectedResult": "Medical records should be added successfully",
+      "testData": "medicalRecord"
+    },
+    {
+      "id": "PM_010",
+      "title": "Verify user can create treatment plan",
+      "priority": "Medium",
+      "steps": [
+        "Navigate to PM Board",
+        "Open a patient record",
+        "Click Treatment Plans tab",
+        "Fill in treatment plan details",
+        "Click Save button",
+        "Verify treatment plan is created"
+      ],
+      "expectedResult": "Treatment plan should be created successfully",
+      "testData": "treatmentPlan"
+    },
+    {
+      "id": "PM_011",
+      "title": "Verify user can add patient vitals",
+      "priority": "Medium",
+      "steps": [
+        "Navigate to PM Board",
+        "Open a patient record",
+        "Click Medical History tab",
+        "Add vital signs (BP, HR, Temp, etc.)",
+        "Click Save button",
+        "Verify vitals are saved"
+      ],
+      "expectedResult": "Patient vitals should be added successfully",
+      "testData": "vitals"
+    },
+    {
+      "id": "PM_012",
+      "title": "Verify user can upload documents",
+      "priority": "Medium",
+      "steps": [
+        "Navigate to PM Board",
+        "Open a patient record",
+        "Click Documents tab",
+        "Click Upload Document button",
+        "Select document type and file",
+        "Verify document is uploaded successfully"
+      ],
+      "expectedResult": "Document should be uploaded successfully",
+      "testData": "documentTypes.medicalRecord"
+    },
+    {
+      "id": "PM_013",
+      "title": "Verify user can add care team members",
+      "priority": "Medium",
+      "steps": [
+        "Navigate to PM Board",
+        "Open a patient record",
+        "Click Care Team tab",
+        "Click Add Care Team Member button",
+        "Select member and role",
+        "Click Save button",
+        "Verify care team member is added"
+      ],
+      "expectedResult": "Care team member should be added successfully",
+      "testData": "careTeam"
+    },
+    {
+      "id": "PM_014",
+      "title": "Verify validation for required fields",
+      "priority": "Medium",
+      "steps": [
+        "Navigate to PM Board",
+        "Click New Patient button",
+        "Leave required fields empty",
+        "Click Save button",
+        "Verify validation errors are displayed"
+      ],
+      "expectedResult": "Validation errors should be displayed for required fields",
+      "testData": "validationErrors"
+    },
+    {
+      "id": "PM_015",
+      "title": "Verify user can filter patients by provider",
+      "priority": "Low",
+      "steps": [
+        "Navigate to PM Board",
+        "Select a provider from provider filter dropdown",
+        "Verify only patients assigned to selected provider are displayed"
+      ],
+      "expectedResult": "Patients should be filtered by selected provider",
+      "testData": "filterOptions.byProvider"
+    },
+    {
+      "id": "PM_016",
+      "title": "Verify user can archive a patient",
+      "priority": "Low",
+      "steps": [
+        "Navigate to PM Board",
+        "Click Archive button on a patient",
+        "Confirm archive action",
+        "Verify patient status changes to Archived"
+      ],
+      "expectedResult": "Patient should be archived successfully",
+      "testData": "patientStatuses.archived"
+    },
+    {
+      "id": "PM_017",
+      "title": "Verify user can activate an archived patient",
+      "priority": "Low",
+      "steps": [
+        "Navigate to PM Board",
+        "Filter by Archived status",
+        "Click Activate button on an archived patient",
+        "Verify patient status changes to Active"
+      ],
+      "expectedResult": "Patient should be activated successfully",
+      "testData": "patientStatuses.active"
+    },
+    {
+      "id": "PM_018",
+      "title": "Verify user can refresh patient list",
+      "priority": "Low",
+      "steps": [
+        "Navigate to PM Board",
+        "Click Refresh button",
+        "Verify patient list is reloaded"
+      ],
+      "expectedResult": "Patient list should be refreshed successfully",
+      "testData": "none"
+    },
+    {
+      "id": "PM_019",
+      "title": "Verify user can clear search filters",
+      "priority": "Low",
+      "steps": [
+        "Navigate to PM Board",
+        "Apply search filters",
+        "Click Clear Search button",
+        "Verify all patients are displayed",
+        "Verify filters are reset"
+      ],
+      "expectedResult": "Search filters should be cleared and all patients displayed",
+      "testData": "none"
+    },
+    {
+      "id": "PM_020",
+      "title": "Verify user can navigate between patient tabs",
+      "priority": "Low",
+      "steps": [
+        "Navigate to PM Board",
+        "Open a patient record",
+        "Click on each tab (Demographics, Medical History, etc.)",
+        "Verify each tab loads correctly"
+      ],
+      "expectedResult": "All patient tabs should be accessible and load correctly",
+      "testData": "tabs"
+    }
+  ]
+}

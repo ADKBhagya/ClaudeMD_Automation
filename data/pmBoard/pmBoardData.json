@@ -1,0 +1,142 @@
+{
+  "newPatient": {
+    "firstName": "John",
+    "lastName": "Doe",
+    "dateOfBirth": "1985-05-15",
+    "gender": "Male",
+    "ssn": "123-45-6789",
+    "email": "john.doe@email.com",
+    "phone": "(555) 123-4567",
+    "address": "123 Main Street",
+    "city": "New York",
+    "state": "NY",
+    "zipCode": "10001",
+    "emergencyContact": "Jane Doe",
+    "emergencyPhone": "(555) 987-6543",
+    "insuranceProvider": "Blue Cross",
+    "insuranceId": "BC123456789",
+    "primaryPhysician": "Dr. Smith"
+  },
+  "editPatient": {
+    "firstName": "Jane",
+    "lastName": "Smith",
+    "dateOfBirth": "1990-08-20",
+    "gender": "Female",
+    "ssn": "987-65-4321",
+    "email": "jane.smith@email.com",
+    "phone": "(555) 234-5678",
+    "address": "456 Oak Avenue",
+    "city": "Los Angeles",
+    "state": "CA",
+    "zipCode": "90001",
+    "emergencyContact": "John Smith",
+    "emergencyPhone": "(555) 876-5432",
+    "insuranceProvider": "United Healthcare",
+    "insuranceId": "UHC987654321",
+    "primaryPhysician": "Dr. Johnson"
+  },
+  "medicalRecord": {
+    "diagnosis": "Hypertension",
+    "medications": "Lisinopril 10mg daily",
+    "allergies": "Penicillin",
+    "chronicConditions": "Type 2 Diabetes",
+    "bloodType": "O+",
+    "height": "5'10\"",
+    "weight": "180 lbs",
+    "notes": "Patient is compliant with medication regimen"
+  },
+  "treatmentPlan": {
+    "planName": "Diabetes Management Plan",
+    "startDate": "2024-01-01",
+    "endDate": "2024-12-31",
+    "provider": "Dr. Smith",
+    "goals": "Maintain HbA1c below 7%",
+    "interventions": "Diet modification, exercise, medication",
+    "followUpInterval": "Every 3 months",
+    "notes": "Patient making good progress"
+  },
+  "searchCriteria": [
+    {
+      "type": "Patient Name",
+      "value": "John Doe",
+      "expectedResults": 1
+    },
+    {
+      "type": "Patient ID",
+      "value": "PT12345",
+      "expectedResults": 1
+    },
+    {
+      "type": "Phone Number",
+      "value": "(555) 123-4567",
+      "expectedResults": 1
+    },
+    {
+      "type": "Email",
+      "value": "john.doe@email.com",
+      "expectedResults": 1
+    },
+    {
+      "type": "Insurance ID",
+      "value": "BC123456789",
+      "expectedResults": 1
+    }
+  ],
+  "filterOptions": {
+    "byStatus": ["Active", "Inactive", "Deceased", "Archived"],
+    "byProvider": ["Dr. Smith", "Dr. Johnson", "Dr. Williams"],
+    "byInsurance": ["Blue Cross", "United Healthcare", "Aetna", "Medicare"],
+    "byGender": ["Male", "Female", "Other"],
+    "byAgeRange": ["0-18", "19-35", "36-50", "51-65", "65+"]
+  },
+  "patientStatuses": {
+    "active": "Active",
+    "inactive": "Inactive",
+    "deceased": "Deceased",
+    "archived": "Archived"
+  },
+  "documentTypes": {
+    "medicalRecord": "Medical Record",
+    "labResult": "Lab Result",
+    "imagingReport": "Imaging Report",
+    "prescription": "Prescription",
+    "referral": "Referral",
+    "consent": "Consent Form",
+    "insurance": "Insurance Document"
+  },
+  "careTeam": {
+    "primaryPhysician": "Dr. Smith",
+    "specialist": "Dr. Williams (Endocrinologist)",
+    "nurse": "Sarah Johnson, RN",
+    "caseManager": "Michael Brown",
+    "therapist": "Dr. Davis (Physical Therapist)"
+  },
+  "vitals": {
+    "bloodPressure": "120/80",
+    "heartRate": "72",
+    "temperature": "98.6",
+    "respiratoryRate": "16",
+    "oxygenSaturation": "98%",
+    "weight": "180",
+    "height": "70"
+  },
+  "validationErrors": {
+    "emptyFirstName": "First name is required",
+    "emptyLastName": "Last name is required",
+    "emptyDOB": "Date of birth is required",
+    "invalidEmail": "Invalid email format",
+    "invalidPhone": "Invalid phone number format",
+    "invalidSSN": "Invalid SSN format",
+    "emptyInsurance": "Insurance provider is required"
+  },
+  "tabs": {
+    "demographics": "Demographics",
+    "medicalHistory": "Medical History",
+    "appointments": "Appointments",
+    "treatmentPlans": "Treatment Plans",
+    "documents": "Documents",
+    "billing": "Billing",
+    "careTeam": "Care Team",
+    "notes": "Clinical Notes"
+  }
+}
