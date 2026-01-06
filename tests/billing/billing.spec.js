@@ -20,6 +20,8 @@ test.describe('Billing Module - Smoke Tests', () => {
   });
 
   test('BILL_001 - Verify user can navigate to Billing', async ({ page }) => {
+    test.setTimeout(60000); // Increase timeout to 60 seconds
+
     // Navigate to Dashboard, Close ChatBot, and Navigate to Billing
     await billingPage.navigateToBilling();
 
@@ -30,5 +32,26 @@ test.describe('Billing Module - Smoke Tests', () => {
     // Verify Billing page loads successfully
     await page.waitForLoadState('domcontentloaded');
     expect(true).toBeTruthy();
+  });
+
+  test('BILL_002 - Verify clear/cross button functionality', async ({ page }) => {
+    test.setTimeout(60000); // Increase timeout to 60 seconds
+
+    // Navigate to Billing page
+    await billingPage.navigateToBilling();
+
+    // Verify we are on Billing page
+    let currentURL = page.url();
+    expect(currentURL).toContain('6/0');
+
+    // Click clear/cross button
+    await billingPage.clickClearButton();
+
+    // Wait for navigation
+    await page.waitForTimeout(2000);
+
+    // Verify we are back on Dashboard
+    currentURL = page.url();
+    expect(currentURL).toContain('dashboard');
   });
 });

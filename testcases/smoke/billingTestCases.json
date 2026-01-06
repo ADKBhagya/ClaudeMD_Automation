@@ -10,7 +10,7 @@
         "Login with valid credentials",
         "Navigate to Dashboard",
         "Close ChatBot",
-        "Navigate to Billing page",
+        "Click on Billing menu",
         "Verify Billing page loads successfully"
       ],
       "expectedResult": "Billing page should be displayed with header and action buttons",
