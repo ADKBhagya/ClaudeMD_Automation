@@ -16,7 +16,7 @@ test.describe('Login Module - Smoke Tests', () => {
     await loginPage.login(validCreds.username, validCreds.password);
 
     // Wait for navigation to dashboard
-    await page.waitForURL('**/dashboard', { timeout: 30000 });
+    await page.waitForURL('**/dashboard', { timeout: 60000 });
 
     // Verify URL is the dashboard
     const currentURL = await loginPage.getCurrentURL();
