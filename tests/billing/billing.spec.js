@@ -301,4 +301,43 @@ test.describe('Billing Module - Smoke Tests', () => {
 
     console.log('\n========== TEST COMPLETED SUCCESSFULLY ==========\n');
   });
+
+  test('BILL_008 - Verify selected clinic is visually indicated', async ({ page }) => {
+    console.log('\n========== BILL_008 TEST EXECUTION ==========');
+
+    // Step 1: Navigate to Billing page
+    console.log('\nStep 1: Navigating to Billing page...');
+    await billingPage.navigateToBilling();
+
+    // Verify we are on Billing page
+    let currentURL = page.url();
+    expect(currentURL).toContain('6/0');
+    console.log('✓ Successfully navigated to Billing page');
+
+    // Step 2: Click Daily Billing button
+    console.log('\nStep 2: Clicking Daily Billing button...');
+    await billingPage.clickDailyBillingButton();
+    await page.waitForTimeout(3000);
+
+    // Wait for page to fully load
+    await page.waitForLoadState('domcontentloaded');
+    console.log('✓ Successfully navigated to Daily Billing page');
+
+    // Step 3: Select a clinic from dropdown
+    console.log('\nStep 3: Selecting a clinic from dropdown...');
+    const selectedClinic = await billingPage.selectClinicFromDropdown();
+    expect(selectedClinic).toBeTruthy();
+    console.log(`✓ Selected Clinic: "${selectedClinic}"`);
+
+    // Step 4: Verify selected clinic is displayed in dropdown field
+    console.log('\nStep 4: Verifying selected clinic is displayed in dropdown field...');
+    const displayedClinic = await billingPage.getSelectedClinicText();
+    console.log(`Displayed clinic in dropdown field: "${displayedClinic}"`);
+
+    // Verify the selected clinic matches the displayed clinic
+    expect(displayedClinic).toBe(selectedClinic);
+    console.log('✓ Selected clinic is visually indicated in the dropdown field');
+
+    console.log('\n========== TEST COMPLETED SUCCESSFULLY ==========\n');
+  });
 });

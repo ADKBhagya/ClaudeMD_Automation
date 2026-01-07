@@ -126,6 +126,24 @@
       ],
       "expectedResult": "No data from Clinic A should be visible after switching to Clinic B",
       "testData": "Multiple Clinics"
+    },
+    {
+      "id": "BILL_008",
+      "title": "Verify selected clinic is visually indicated",
+      "priority": "Low",
+      "category": "UI/UX",
+      "steps": [
+        "Login with valid credentials",
+        "Navigate to Dashboard",
+        "Close ChatBot",
+        "Click on Billing menu",
+        "Verify Billing page loads successfully",
+        "Click on Daily Billing button",
+        "Select a clinic from dropdown",
+        "Verify selected clinic is displayed in dropdown field"
+      ],
+      "expectedResult": "Selected clinic should be clearly highlighted in the dropdown and visible in the dropdown field",
+      "testData": "Valid clinic"
     }
   ]
 }
