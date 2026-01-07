@@ -22,7 +22,10 @@
       "priority": "Medium",
       "steps": [
         "Login with valid credentials",
-        "Navigate to Billing page",
+        "Navigate to Dashboard",
+        "Close ChatBot",
+        "Click on Billing menu",
+        "Verify Billing page loads successfully",
         "Click on clear/cross button",
         "Verify navigation back to Dashboard"
       ],
@@ -35,7 +38,10 @@
       "priority": "High",
       "steps": [
         "Login with valid credentials",
-        "Navigate to Billing page",
+        "Navigate to Dashboard",
+        "Close ChatBot",
+        "Click on Billing menu",
+        "Verify Billing page loads successfully",
         "Click on Daily Billing button",
         "Verify navigation to Daily Billing view"
       ],
@@ -48,7 +54,10 @@
       "priority": "High",
       "steps": [
         "Login with valid credentials",
-        "Navigate to Billing page",
+        "Navigate to Dashboard",
+        "Close ChatBot",
+        "Click on Billing menu",
+        "Verify Billing page loads successfully",
         "Click on Daily Billing button",
         "Verify organization dropdown is visible",
         "Verify organization dropdown is accessible"
@@ -63,7 +72,10 @@
       "category": "Functional Positive",
       "steps": [
         "Login with valid credentials",
-        "Navigate to Billing page",
+        "Navigate to Dashboard",
+        "Close ChatBot",
+        "Click on Billing menu",
+        "Verify Billing page loads successfully",
         "Click on Daily Billing button",
         "Verify organization dropdown is visible",
         "Select a different organization from dropdown",
@@ -71,6 +83,26 @@
         "Verify billing records are updated for selected organization"
       ],
       "expectedResult": "After selecting organization and refreshing page, billing grid should display selected organization's records",
+      "testData": "Valid organization"
+    },
+    {
+      "id": "BILL_006",
+      "title": "Verify selected organization remains active after page refresh",
+      "priority": "Medium",
+      "category": "Functional Positive",
+      "steps": [
+        "Login with valid credentials",
+        "Navigate to Dashboard",
+        "Close ChatBot",
+        "Click on Billing menu",
+        "Verify Billing page loads successfully",
+        "Click on Daily Billing button",
+        "Select an organization from dropdown",
+        "Note the selected organization name",
+        "Refresh the page",
+        "Verify previously selected organization remains selected"
+      ],
+      "expectedResult": "Previously selected organization should remain selected after page refresh",
       "testData": "Valid organization"
     }
   ]

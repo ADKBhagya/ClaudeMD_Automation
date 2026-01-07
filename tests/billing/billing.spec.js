@@ -165,4 +165,55 @@ test.describe('Billing Module - Smoke Tests', () => {
 
     console.log('\n========== TEST COMPLETED SUCCESSFULLY ==========\n');
   });
+
+  test('BILL_006 - Verify selected organization remains active after page refresh', async ({ page }) => {
+    console.log('\n========== BILL_006 TEST EXECUTION ==========');
+
+    // Step 1: Navigate to Billing page
+    console.log('\nStep 1: Navigating to Billing page...');
+    await billingPage.navigateToBilling();
+
+    // Verify we are on Billing page
+    let currentURL = page.url();
+    expect(currentURL).toContain('6/0');
+    console.log('✓ Successfully navigated to Billing page');
+
+    // Step 2: Click Daily Billing button
+    console.log('\nStep 2: Clicking Daily Billing button...');
+    await billingPage.clickDailyBillingButton();
+    await page.waitForTimeout(3000);
+
+    // Wait for page to fully load
+    await page.waitForLoadState('domcontentloaded');
+    console.log('✓ Successfully navigated to Daily Billing page');
+
+    // Step 3: Select an organization from dropdown
+    console.log('\nStep 3: Selecting an organization from dropdown...');
+    const selectedOrg = await billingPage.selectOrganizationFromDropdown();
+    expect(selectedOrg).toBeTruthy();
+    console.log(`✓ Selected Organization: "${selectedOrg}"`);
+
+    // Step 4: Note the selected organization name
+    console.log('\nStep 4: Noting the selected organization name...');
+    const selectedOrgBeforeRefresh = selectedOrg;
+    console.log(`Organization before refresh: "${selectedOrgBeforeRefresh}"`);
+
+    // Step 5: Refresh the page
+    console.log('\nStep 5: Refreshing the page...');
+    const refreshed = await billingPage.refreshPage();
+    expect(refreshed).toBeTruthy();
+    await page.waitForLoadState('networkidle');
+    console.log('✓ Page refreshed successfully');
+
+    // Step 6: Verify previously selected organization remains selected
+    console.log('\nStep 6: Verifying selected organization after refresh...');
+    const selectedOrgAfterRefresh = await billingPage.getSelectedOrganizationText();
+    console.log(`Organization after refresh: "${selectedOrgAfterRefresh}"`);
+
+    // Verify the organization remained selected
+    expect(selectedOrgAfterRefresh).toBe(selectedOrgBeforeRefresh);
+    console.log('✓ Selected organization remains active after page refresh');
+
+    console.log('\n========== TEST COMPLETED SUCCESSFULLY ==========\n');
+  });
 });
