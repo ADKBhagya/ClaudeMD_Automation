@@ -17,12 +17,9 @@ class BillingPage extends BasePage {
     this.refreshButton = 'xpath=//button[contains(., "Refresh") or contains(@aria-label, "Refresh") or @title="Refresh"]';
 
     // Filters - Daily Billing Page
-    this.clinicDropdown = 'xpath=//p-dropdown | //select[contains(@class, "clinic")] | //div[contains(@class, "p-dropdown")]';
+    this.clinicDropdown = 'xpath=//p-dropdown | //select | //div[contains(@class, "p-dropdown")]';
     this.clinicDropdownTrigger = 'xpath=//p-dropdown//span[@class="p-dropdown-trigger-icon"] | //div[contains(@class, "p-dropdown-trigger")]';
     this.clinicDropdownOptions = 'xpath=//li[contains(@class, "p-dropdown-item")]';
-
-    // Organization Dropdown
-    this.organizationDropdown = 'xpath=//p-dropdown | //select | //div[contains(@class, "p-dropdown")]';
   }
 
   async navigateToBilling() {
@@ -61,32 +58,8 @@ class BillingPage extends BasePage {
     }
   }
 
-  async selectClinicFromDropdown(clinicName) {
-    try {
-      // Try to click the dropdown to open it
-      const dropdown = await this.page.locator('p-dropdown, .p-dropdown, select').first();
-      await dropdown.click({ timeout: 10000 });
-      await this.waitForTimeout(1500);
-
-      // Try to select the first available option
-      const firstOption = await this.page.locator('li[role="option"], .p-dropdown-item, option').first();
-      if (firstOption) {
-        await firstOption.click({ timeout: 10000 });
-        await this.waitForTimeout(2000);
-        return true;
-      }
-      return false;
-    } catch (error) {
-      console.log(`Error selecting clinic: ${error.message}`);
-      return false;
-    }
-  }
 
   async isClinicDropdownVisible() {
-    return await this.isVisible(this.clinicDropdown);
-  }
-
-  async isOrganizationDropdownVisible() {
     try {
       const dropdown = await this.page.locator('p-dropdown, .p-dropdown, select').first();
       return await dropdown.isVisible({ timeout: 5000 });
@@ -95,7 +68,7 @@ class BillingPage extends BasePage {
     }
   }
 
-  async isOrganizationDropdownAccessible() {
+  async isClinicDropdownAccessible() {
     try {
       const dropdown = await this.page.locator('p-dropdown, .p-dropdown, select').first();
       const isVisible = await dropdown.isVisible({ timeout: 5000 });
@@ -106,7 +79,7 @@ class BillingPage extends BasePage {
     }
   }
 
-  async selectOrganizationFromDropdown(organizationName) {
+  async selectClinicFromDropdown(clinicName) {
     try {
       // Click the dropdown to open it
       const dropdown = await this.page.locator('p-dropdown, .p-dropdown, select').first();
@@ -119,11 +92,11 @@ class BillingPage extends BasePage {
 
       let selectedOptionText = '';
 
-      if (organizationName) {
-        // Select specific organization by name
-        const option = await this.page.locator(`li[role="option"]:has-text("${organizationName}"), .p-dropdown-item:has-text("${organizationName}"), option:has-text("${organizationName}")`).first();
+      if (clinicName) {
+        // Select specific clinic by name
+        const option = await this.page.locator(`li[role="option"]:has-text("${clinicName}"), .p-dropdown-item:has-text("${clinicName}"), option:has-text("${clinicName}")`).first();
         selectedOptionText = await option.textContent();
-        console.log(`Selecting organization: ${selectedOptionText?.trim()}`);
+        console.log(`Selecting clinic: ${selectedOptionText?.trim()}`);
         await option.click({ timeout: 10000 });
       } else {
         // Select the next available option (second option, index 1)
@@ -141,7 +114,7 @@ class BillingPage extends BasePage {
       await this.waitForTimeout(2000);
       return selectedOptionText?.trim() || 'Unknown';
     } catch (error) {
-      console.log(`Error selecting organization: ${error.message}`);
+      console.log(`Error selecting clinic: ${error.message}`);
       return null;
     }
   }
@@ -157,13 +130,13 @@ class BillingPage extends BasePage {
     }
   }
 
-  async getSelectedOrganizationText() {
+  async getSelectedClinicText() {
     try {
       await this.waitForTimeout(1000);
       const selectedText = await this.page.locator('p-dropdown .p-dropdown-label, .p-dropdown-label, select option:checked').first().textContent();
       return selectedText?.trim() || 'Unknown';
     } catch (error) {
-      console.log(`Error getting selected organization text: ${error.message}`);
+      console.log(`Error getting selected clinic text: ${error.message}`);
       return 'Unknown';
     }
   }

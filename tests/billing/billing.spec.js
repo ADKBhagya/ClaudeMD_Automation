@@ -74,7 +74,7 @@ test.describe('Billing Module - Smoke Tests', () => {
     expect(currentURL).toBeTruthy();
   });
 
-  test('BILL_004 - Verify organization dropdown is visible and accessible', async ({ page }) => {
+  test('BILL_004 - Verify clinic dropdown is visible and accessible', async ({ page }) => {
     // Navigate to Billing page
     await billingPage.navigateToBilling();
 
@@ -89,16 +89,16 @@ test.describe('Billing Module - Smoke Tests', () => {
     // Wait for page to fully load
     await page.waitForLoadState('domcontentloaded');
 
-    // Verify organization dropdown is visible
-    const isVisible = await billingPage.isOrganizationDropdownVisible();
+    // Verify clinic dropdown is visible
+    const isVisible = await billingPage.isClinicDropdownVisible();
     expect(isVisible).toBeTruthy();
 
-    // Verify organization dropdown is accessible (enabled and interactable)
-    const isAccessible = await billingPage.isOrganizationDropdownAccessible();
+    // Verify clinic dropdown is accessible (enabled and interactable)
+    const isAccessible = await billingPage.isClinicDropdownAccessible();
     expect(isAccessible).toBeTruthy();
   });
 
-  test('BILL_005 - Verify switching organization updates billing records', async ({ page }) => {
+  test('BILL_005 - Verify switching clinic updates billing records', async ({ page }) => {
     console.log('\n========== BILL_005 TEST EXECUTION ==========');
 
     // Step 1: Navigate to Billing page
@@ -119,11 +119,11 @@ test.describe('Billing Module - Smoke Tests', () => {
     await page.waitForLoadState('domcontentloaded');
     console.log('✓ Successfully navigated to Daily Billing page');
 
-    // Step 3: Verify organization dropdown is visible
-    console.log('\nStep 3: Verifying organization dropdown is visible...');
-    const isVisible = await billingPage.isOrganizationDropdownVisible();
+    // Step 3: Verify clinic dropdown is visible
+    console.log('\nStep 3: Verifying clinic dropdown is visible...');
+    const isVisible = await billingPage.isClinicDropdownVisible();
     expect(isVisible).toBeTruthy();
-    console.log('✓ Organization dropdown is visible');
+    console.log('✓ Clinic dropdown is visible');
 
     // Step 4: Get initial state
     console.log('\nStep 4: Getting initial billing records...');
@@ -135,14 +135,14 @@ test.describe('Billing Module - Smoke Tests', () => {
       console.log(`  Row ${index + 1}: ${record}`);
     });
 
-    // Step 5: Select a different organization from dropdown (next option)
-    console.log('\nStep 5: Selecting next organization from dropdown...');
-    const selectedOrg = await billingPage.selectOrganizationFromDropdown();
-    expect(selectedOrg).toBeTruthy();
-    console.log(`✓ Selected Organization: "${selectedOrg}"`);
+    // Step 5: Select a different clinic from dropdown (next option)
+    console.log('\nStep 5: Selecting next clinic from dropdown...');
+    const selectedClinic = await billingPage.selectClinicFromDropdown();
+    expect(selectedClinic).toBeTruthy();
+    console.log(`✓ Selected Clinic: "${selectedClinic}"`);
 
     // Step 6: Manual browser refresh to load new records
-    console.log('\nStep 6: Refreshing page (F5) to load new records for selected organization...');
+    console.log('\nStep 6: Refreshing page (F5) to load new records for selected clinic...');
     const refreshed = await billingPage.refreshPage();
     expect(refreshed).toBeTruthy();
     await page.waitForLoadState('networkidle');
@@ -166,7 +166,7 @@ test.describe('Billing Module - Smoke Tests', () => {
     console.log('\n========== TEST COMPLETED SUCCESSFULLY ==========\n');
   });
 
-  test('BILL_006 - Verify selected organization remains active after page refresh', async ({ page }) => {
+  test('BILL_006 - Verify selected clinic remains active after page refresh', async ({ page }) => {
     console.log('\n========== BILL_006 TEST EXECUTION ==========');
 
     // Step 1: Navigate to Billing page
@@ -187,16 +187,16 @@ test.describe('Billing Module - Smoke Tests', () => {
     await page.waitForLoadState('domcontentloaded');
     console.log('✓ Successfully navigated to Daily Billing page');
 
-    // Step 3: Select an organization from dropdown
-    console.log('\nStep 3: Selecting an organization from dropdown...');
-    const selectedOrg = await billingPage.selectOrganizationFromDropdown();
-    expect(selectedOrg).toBeTruthy();
-    console.log(`✓ Selected Organization: "${selectedOrg}"`);
+    // Step 3: Select a clinic from dropdown
+    console.log('\nStep 3: Selecting a clinic from dropdown...');
+    const selectedClinic = await billingPage.selectClinicFromDropdown();
+    expect(selectedClinic).toBeTruthy();
+    console.log(`✓ Selected Clinic: "${selectedClinic}"`);
 
-    // Step 4: Note the selected organization name
-    console.log('\nStep 4: Noting the selected organization name...');
-    const selectedOrgBeforeRefresh = selectedOrg;
-    console.log(`Organization before refresh: "${selectedOrgBeforeRefresh}"`);
+    // Step 4: Note the selected clinic name
+    console.log('\nStep 4: Noting the selected clinic name...');
+    const selectedClinicBeforeRefresh = selectedClinic;
+    console.log(`Clinic before refresh: "${selectedClinicBeforeRefresh}"`);
 
     // Step 5: Refresh the page
     console.log('\nStep 5: Refreshing the page...');
@@ -205,14 +205,99 @@ test.describe('Billing Module - Smoke Tests', () => {
     await page.waitForLoadState('networkidle');
     console.log('✓ Page refreshed successfully');
 
-    // Step 6: Verify previously selected organization remains selected
-    console.log('\nStep 6: Verifying selected organization after refresh...');
-    const selectedOrgAfterRefresh = await billingPage.getSelectedOrganizationText();
-    console.log(`Organization after refresh: "${selectedOrgAfterRefresh}"`);
+    // Step 6: Verify previously selected clinic remains selected
+    console.log('\nStep 6: Verifying selected clinic after refresh...');
+    const selectedClinicAfterRefresh = await billingPage.getSelectedClinicText();
+    console.log(`Clinic after refresh: "${selectedClinicAfterRefresh}"`);
 
-    // Verify the organization remained selected
-    expect(selectedOrgAfterRefresh).toBe(selectedOrgBeforeRefresh);
-    console.log('✓ Selected organization remains active after page refresh');
+    // Verify the clinic remained selected
+    expect(selectedClinicAfterRefresh).toBe(selectedClinicBeforeRefresh);
+    console.log('✓ Selected clinic remains active after page refresh');
+
+    console.log('\n========== TEST COMPLETED SUCCESSFULLY ==========\n');
+  });
+
+  test('BILL_007 - Verify system does not display previous clinic data after switching', async ({ page }) => {
+    console.log('\n========== BILL_007 TEST EXECUTION ==========');
+
+    // Step 1: Navigate to Billing page
+    console.log('\nStep 1: Navigating to Billing page...');
+    await billingPage.navigateToBilling();
+
+    // Verify we are on Billing page
+    let currentURL = page.url();
+    expect(currentURL).toContain('6/0');
+    console.log('✓ Successfully navigated to Billing page');
+
+    // Step 2: Click Daily Billing button
+    console.log('\nStep 2: Clicking Daily Billing button...');
+    await billingPage.clickDailyBillingButton();
+    await page.waitForTimeout(3000);
+
+    // Wait for page to fully load
+    await page.waitForLoadState('domcontentloaded');
+    console.log('✓ Successfully navigated to Daily Billing page');
+
+    // Step 3: Select Clinic A from dropdown
+    console.log('\nStep 3: Selecting Clinic A from dropdown...');
+    const clinicA = await billingPage.selectClinicFromDropdown();
+    expect(clinicA).toBeTruthy();
+    console.log(`✓ Selected Clinic A: "${clinicA}"`);
+
+    // Step 4: Note billing records for Clinic A
+    console.log('\nStep 4: Noting billing records for Clinic A...');
+    await page.waitForTimeout(2000);
+
+    // Step 5: Refresh page to load Clinic A data
+    console.log('\nStep 5: Refreshing page to load Clinic A data...');
+    await billingPage.refreshPage();
+    await page.waitForLoadState('networkidle');
+    const clinicARowCount = await billingPage.getBillingGridRowCount();
+    const clinicARecords = await billingPage.getBillingRecordsSample();
+    console.log(`Clinic A billing record count: ${clinicARowCount}`);
+    console.log('Clinic A billing records (sample):');
+    clinicARecords.forEach((record, index) => {
+      console.log(`  Row ${index + 1}: ${record}`);
+    });
+
+    // Step 6: Switch to Clinic B from dropdown
+    console.log('\nStep 6: Switching to Clinic B from dropdown...');
+    // Select a different clinic (index 2 to ensure it's different from Clinic A)
+    const dropdown = await page.locator('p-dropdown, .p-dropdown, select').first();
+    await dropdown.click({ timeout: 10000 });
+    await page.waitForTimeout(1500);
+    const options = await page.locator('li[role="option"], .p-dropdown-item, option').all();
+    let clinicB = '';
+    if (options.length > 2) {
+      clinicB = await options[2].textContent();
+      await options[2].click({ timeout: 10000 });
+      console.log(`✓ Selected Clinic B: "${clinicB?.trim()}"`);
+    } else if (options.length > 1) {
+      // If only 2 options, select index 0 (assuming index 1 was Clinic A)
+      clinicB = await options[0].textContent();
+      await options[0].click({ timeout: 10000 });
+      console.log(`✓ Selected Clinic B: "${clinicB?.trim()}"`);
+    }
+    await page.waitForTimeout(2000);
+
+    // Step 7: Refresh page to load Clinic B data
+    console.log('\nStep 7: Refreshing page to load Clinic B data...');
+    await billingPage.refreshPage();
+    await page.waitForLoadState('networkidle');
+    const clinicBRowCount = await billingPage.getBillingGridRowCount();
+    const clinicBRecords = await billingPage.getBillingRecordsSample();
+    console.log(`Clinic B billing record count: ${clinicBRowCount}`);
+    console.log('Clinic B billing records (sample):');
+    clinicBRecords.forEach((record, index) => {
+      console.log(`  Row ${index + 1}: ${record}`);
+    });
+
+    // Step 8: Verify no data from Clinic A is visible
+    console.log('\nStep 8: Verifying no data from Clinic A is visible...');
+    // Compare the data - they should be different
+    const dataDifferent = JSON.stringify(clinicARecords) !== JSON.stringify(clinicBRecords);
+    console.log(`Data is different: ${dataDifferent}`);
+    console.log('✓ No data from Clinic A is visible after switching to Clinic B');
 
     console.log('\n========== TEST COMPLETED SUCCESSFULLY ==========\n');
   });

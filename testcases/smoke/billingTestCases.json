@@ -50,7 +50,7 @@
     },
     {
       "id": "BILL_004",
-      "title": "Verify organization dropdown is visible and accessible",
+      "title": "Verify clinic dropdown is visible and accessible",
       "priority": "High",
       "steps": [
         "Login with valid credentials",
@@ -59,15 +59,15 @@
         "Click on Billing menu",
         "Verify Billing page loads successfully",
         "Click on Daily Billing button",
-        "Verify organization dropdown is visible",
-        "Verify organization dropdown is accessible"
+        "Verify clinic dropdown is visible",
+        "Verify clinic dropdown is accessible"
       ],
-      "expectedResult": "Organization dropdown should be visible and accessible on the daily billing page",
+      "expectedResult": "Clinic dropdown should be visible and accessible on the daily billing page",
       "testData": "none"
     },
     {
       "id": "BILL_005",
-      "title": "Verify switching organization updates billing records",
+      "title": "Verify switching clinic updates billing records",
       "priority": "High",
       "category": "Functional Positive",
       "steps": [
@@ -77,17 +77,17 @@
         "Click on Billing menu",
         "Verify Billing page loads successfully",
         "Click on Daily Billing button",
-        "Verify organization dropdown is visible",
-        "Select a different organization from dropdown",
+        "Verify clinic dropdown is visible",
+        "Select a different clinic from dropdown",
         "Refresh page to load new records",
-        "Verify billing records are updated for selected organization"
+        "Verify billing records are updated for selected clinic"
       ],
-      "expectedResult": "After selecting organization and refreshing page, billing grid should display selected organization's records",
-      "testData": "Valid organization"
+      "expectedResult": "After selecting clinic and refreshing page, billing grid should display selected clinic's records",
+      "testData": "Valid clinic"
     },
     {
       "id": "BILL_006",
-      "title": "Verify selected organization remains active after page refresh",
+      "title": "Verify selected clinic remains active after page refresh",
       "priority": "Medium",
       "category": "Functional Positive",
       "steps": [
@@ -97,13 +97,35 @@
         "Click on Billing menu",
         "Verify Billing page loads successfully",
         "Click on Daily Billing button",
-        "Select an organization from dropdown",
-        "Note the selected organization name",
+        "Select a clinic from dropdown",
+        "Note the selected clinic name",
         "Refresh the page",
-        "Verify previously selected organization remains selected"
+        "Verify previously selected clinic remains selected"
       ],
-      "expectedResult": "Previously selected organization should remain selected after page refresh",
-      "testData": "Valid organization"
+      "expectedResult": "Previously selected clinic should remain selected after page refresh",
+      "testData": "Valid clinic"
+    },
+    {
+      "id": "BILL_007",
+      "title": "Verify system does not display previous clinic data after switching",
+      "priority": "High",
+      "category": "Functional Negative",
+      "steps": [
+        "Login with valid credentials",
+        "Navigate to Dashboard",
+        "Close ChatBot",
+        "Click on Billing menu",
+        "Verify Billing page loads successfully",
+        "Click on Daily Billing button",
+        "Select Clinic A from dropdown",
+        "Note billing records for Clinic A",
+        "Refresh page to load Clinic A data",
+        "Switch to Clinic B from dropdown",
+        "Refresh page to load Clinic B data",
+        "Verify no data from Clinic A is visible in billing grid"
+      ],
+      "expectedResult": "No data from Clinic A should be visible after switching to Clinic B",
+      "testData": "Multiple Clinics"
     }
   ]
 }
