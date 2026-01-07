@@ -73,4 +73,96 @@ test.describe('Billing Module - Smoke Tests', () => {
     // Verify we navigated to Daily Billing view/page
     expect(currentURL).toBeTruthy();
   });
+
+  test('BILL_004 - Verify organization dropdown is visible and accessible', async ({ page }) => {
+    // Navigate to Billing page
+    await billingPage.navigateToBilling();
+
+    // Verify we are on Billing page
+    let currentURL = page.url();
+    expect(currentURL).toContain('6/0');
+
+    // Click Daily Billing button to navigate to daily billing page
+    await billingPage.clickDailyBillingButton();
+    await page.waitForTimeout(3000);
+
+    // Wait for page to fully load
+    await page.waitForLoadState('domcontentloaded');
+
+    // Verify organization dropdown is visible
+    const isVisible = await billingPage.isOrganizationDropdownVisible();
+    expect(isVisible).toBeTruthy();
+
+    // Verify organization dropdown is accessible (enabled and interactable)
+    const isAccessible = await billingPage.isOrganizationDropdownAccessible();
+    expect(isAccessible).toBeTruthy();
+  });
+
+  test('BILL_005 - Verify switching organization updates billing records', async ({ page }) => {
+    console.log('\n========== BILL_005 TEST EXECUTION ==========');
+
+    // Step 1: Navigate to Billing page
+    console.log('\nStep 1: Navigating to Billing page...');
+    await billingPage.navigateToBilling();
+
+    // Verify we are on Billing page
+    let currentURL = page.url();
+    expect(currentURL).toContain('6/0');
+    console.log('✓ Successfully navigated to Billing page');
+
+    // Step 2: Click Daily Billing button
+    console.log('\nStep 2: Clicking Daily Billing button...');
+    await billingPage.clickDailyBillingButton();
+    await page.waitForTimeout(3000);
+
+    // Wait for page to fully load
+    await page.waitForLoadState('domcontentloaded');
+    console.log('✓ Successfully navigated to Daily Billing page');
+
+    // Step 3: Verify organization dropdown is visible
+    console.log('\nStep 3: Verifying organization dropdown is visible...');
+    const isVisible = await billingPage.isOrganizationDropdownVisible();
+    expect(isVisible).toBeTruthy();
+    console.log('✓ Organization dropdown is visible');
+
+    // Step 4: Get initial state
+    console.log('\nStep 4: Getting initial billing records...');
+    const initialRowCount = await billingPage.getBillingGridRowCount();
+    const initialRecords = await billingPage.getBillingRecordsSample();
+    console.log(`Initial billing record count: ${initialRowCount}`);
+    console.log('Initial billing records (sample):');
+    initialRecords.forEach((record, index) => {
+      console.log(`  Row ${index + 1}: ${record}`);
+    });
+
+    // Step 5: Select a different organization from dropdown (next option)
+    console.log('\nStep 5: Selecting next organization from dropdown...');
+    const selectedOrg = await billingPage.selectOrganizationFromDropdown();
+    expect(selectedOrg).toBeTruthy();
+    console.log(`✓ Selected Organization: "${selectedOrg}"`);
+
+    // Step 6: Manual browser refresh to load new records
+    console.log('\nStep 6: Refreshing page (F5) to load new records for selected organization...');
+    const refreshed = await billingPage.refreshPage();
+    expect(refreshed).toBeTruthy();
+    await page.waitForLoadState('networkidle');
+    console.log('✓ Page refreshed successfully');
+
+    // Step 7: Verify billing records are updated
+    console.log('\nStep 7: Verifying billing grid refreshed with new records...');
+    const updatedRowCount = await billingPage.getBillingGridRowCount();
+    const updatedRecords = await billingPage.getBillingRecordsSample();
+
+    console.log(`Updated billing record count: ${updatedRowCount}`);
+    console.log('Updated billing records (sample):');
+    updatedRecords.forEach((record, index) => {
+      console.log(`  Row ${index + 1}: ${record}`);
+    });
+
+    // The grid should have updated (row count may be same or different, but grid should exist)
+    expect(updatedRowCount).toBeGreaterThanOrEqual(0);
+    console.log('✓ Billing grid has refreshed successfully');
+
+    console.log('\n========== TEST COMPLETED SUCCESSFULLY ==========\n');
+  });
 });

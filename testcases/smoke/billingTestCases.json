@@ -41,6 +41,37 @@
       ],
       "expectedResult": "User should be navigated to Daily Billing view/page",
       "testData": "none"
+    },
+    {
+      "id": "BILL_004",
+      "title": "Verify organization dropdown is visible and accessible",
+      "priority": "High",
+      "steps": [
+        "Login with valid credentials",
+        "Navigate to Billing page",
+        "Click on Daily Billing button",
+        "Verify organization dropdown is visible",
+        "Verify organization dropdown is accessible"
+      ],
+      "expectedResult": "Organization dropdown should be visible and accessible on the daily billing page",
+      "testData": "none"
+    },
+    {
+      "id": "BILL_005",
+      "title": "Verify switching organization updates billing records",
+      "priority": "High",
+      "category": "Functional Positive",
+      "steps": [
+        "Login with valid credentials",
+        "Navigate to Billing page",
+        "Click on Daily Billing button",
+        "Verify organization dropdown is visible",
+        "Select a different organization from dropdown",
+        "Refresh page to load new records",
+        "Verify billing records are updated for selected organization"
+      ],
+      "expectedResult": "After selecting organization and refreshing page, billing grid should display selected organization's records",
+      "testData": "Valid organization"
     }
   ]
 }
