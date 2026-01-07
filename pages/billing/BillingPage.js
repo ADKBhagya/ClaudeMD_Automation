@@ -13,6 +13,7 @@ class BillingPage extends BasePage {
 
     // Action Buttons
     this.clearButton = 'xpath=/html/body/ng-component/div/div/aeliusmd-billing-board/div/div/p-toolbar/div/div[2]/button/span[1]';
+    this.dailyBillingButton = 'xpath=//button[contains(., "Daily Billing") or contains(@aria-label, "Daily Billing")]';
   }
 
   async navigateToBilling() {
@@ -33,6 +34,11 @@ class BillingPage extends BasePage {
   async clickClearButton() {
     await this.click(this.clearButton);
     await this.waitForTimeout(1000);
+  }
+
+  async clickDailyBillingButton() {
+    await this.click(this.dailyBillingButton);
+    await this.waitForTimeout(2000);
   }
 }
 

@@ -15,6 +15,32 @@
       ],
       "expectedResult": "Billing page should be displayed with header and action buttons",
       "testData": "none"
+    },
+    {
+      "id": "BILL_002",
+      "title": "Verify clear/cross button functionality",
+      "priority": "Medium",
+      "steps": [
+        "Login with valid credentials",
+        "Navigate to Billing page",
+        "Click on clear/cross button",
+        "Verify navigation back to Dashboard"
+      ],
+      "expectedResult": "User should be navigated back to Dashboard",
+      "testData": "none"
+    },
+    {
+      "id": "BILL_003",
+      "title": "Verify Daily Billing button navigation",
+      "priority": "High",
+      "steps": [
+        "Login with valid credentials",
+        "Navigate to Billing page",
+        "Click on Daily Billing button",
+        "Verify navigation to Daily Billing view"
+      ],
+      "expectedResult": "User should be navigated to Daily Billing view/page",
+      "testData": "none"
     }
   ]
 }
