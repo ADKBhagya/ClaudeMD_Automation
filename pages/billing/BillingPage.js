@@ -20,6 +20,9 @@ class BillingPage extends BasePage {
     this.clinicDropdown = 'xpath=//p-dropdown | //select | //div[contains(@class, "p-dropdown")]';
     this.clinicDropdownTrigger = 'xpath=//p-dropdown//span[@class="p-dropdown-trigger-icon"] | //div[contains(@class, "p-dropdown-trigger")]';
     this.clinicDropdownOptions = 'xpath=//li[contains(@class, "p-dropdown-item")]';
+
+    // DOS Panel
+    this.dosPanel = 'xpath=//div[contains(@class, "dos-panel") or contains(@class, "date-panel") or contains(@class, "left-panel")]';
   }
 
   async navigateToBilling() {
@@ -156,6 +159,65 @@ class BillingPage extends BasePage {
       return sampleData;
     } catch (error) {
       console.log(`Error getting billing records sample: ${error.message}`);
+      return [];
+    }
+  }
+
+  async isDOSPanelVisible() {
+    try {
+      await this.waitForTimeout(2000);
+      // Try multiple selectors to find the DOS panel
+      const dosPanelSelectors = [
+        'div[class*="dos-panel"]',
+        'div[class*="date-panel"]',
+        'div[class*="left-panel"]',
+        'div[class*="sidebar"]',
+        '.dos-list',
+        '.date-list'
+      ];
+
+      for (const selector of dosPanelSelectors) {
+        const panel = await this.page.locator(selector).first();
+        const isVisible = await panel.isVisible({ timeout: 3000 }).catch(() => false);
+        if (isVisible) {
+          console.log(`DOS panel found with selector: ${selector}`);
+          return true;
+        }
+      }
+
+      // If specific selectors fail, check for any left-side panel with dates
+      const anyPanel = await this.page.locator('div').filter({ hasText: /\d{2}\/\d{2}\/\d{4}/ }).first();
+      const hasDatePanel = await anyPanel.isVisible({ timeout: 3000 }).catch(() => false);
+      if (hasDatePanel) {
+        console.log('DOS panel found by date pattern');
+        return true;
+      }
+
+      return false;
+    } catch (error) {
+      console.log(`Error checking DOS panel visibility: ${error.message}`);
+      return false;
+    }
+  }
+
+  async getDOSPanelDates() {
+    try {
+      await this.waitForTimeout(2000);
+      // Look for date patterns in the page
+      const dateElements = await this.page.locator('div, span, li').filter({ hasText: /\d{2}\/\d{2}\/\d{4}/ }).all();
+      const dates = [];
+
+      for (let i = 0; i < Math.min(5, dateElements.length); i++) {
+        const dateText = await dateElements[i].textContent();
+        const dateMatch = dateText?.match(/\d{2}\/\d{2}\/\d{4}/);
+        if (dateMatch) {
+          dates.push(dateMatch[0]);
+        }
+      }
+
+      return dates;
+    } catch (error) {
+      console.log(`Error getting DOS panel dates: ${error.message}`);
       return [];
     }
   }

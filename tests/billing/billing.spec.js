@@ -340,4 +340,47 @@ test.describe('Billing Module - Smoke Tests', () => {
 
     console.log('\n========== TEST COMPLETED SUCCESSFULLY ==========\n');
   });
+
+  test('BILL_009 - Verify DOS panel is displayed on Daily Billing - Injury page', async ({ page }) => {
+    console.log('\n========== BILL_009 TEST EXECUTION ==========');
+
+    // Step 1: Navigate to Billing page
+    console.log('\nStep 1: Navigating to Billing page...');
+    await billingPage.navigateToBilling();
+
+    // Verify we are on Billing page
+    let currentURL = page.url();
+    expect(currentURL).toContain('6/0');
+    console.log('✓ Successfully navigated to Billing page');
+
+    // Step 2: Click Daily Billing button
+    console.log('\nStep 2: Clicking Daily Billing button...');
+    await billingPage.clickDailyBillingButton();
+    await page.waitForTimeout(3000);
+
+    // Wait for page to fully load
+    await page.waitForLoadState('domcontentloaded');
+    console.log('✓ Successfully navigated to Daily Billing page');
+
+    // Step 3: Verify DOS panel is visible on the left side
+    console.log('\nStep 3: Verifying DOS panel is visible on the left side...');
+    const isDOSPanelVisible = await billingPage.isDOSPanelVisible();
+    expect(isDOSPanelVisible).toBeTruthy();
+    console.log('✓ DOS panel is visible');
+
+    // Step 4: Verify DOS panel contains list of dates
+    console.log('\nStep 4: Verifying DOS panel contains list of dates...');
+    const dosDates = await billingPage.getDOSPanelDates();
+    console.log(`DOS dates found: ${dosDates.length}`);
+    if (dosDates.length > 0) {
+      console.log('Sample dates from DOS panel:');
+      dosDates.slice(0, 5).forEach((date, index) => {
+        console.log(`  Date ${index + 1}: ${date}`);
+      });
+    }
+    expect(dosDates.length).toBeGreaterThan(0);
+    console.log('✓ DOS panel contains list of dates');
+
+    console.log('\n========== TEST COMPLETED SUCCESSFULLY ==========\n');
+  });
 });

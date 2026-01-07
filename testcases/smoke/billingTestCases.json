@@ -144,6 +144,24 @@
       ],
       "expectedResult": "Selected clinic should be clearly highlighted in the dropdown and visible in the dropdown field",
       "testData": "Valid clinic"
+    },
+    {
+      "id": "BILL_009",
+      "title": "Verify DOS panel is displayed on Daily Billing - Injury page",
+      "priority": "High",
+      "category": "Functional Positive",
+      "steps": [
+        "Login with valid credentials",
+        "Navigate to Dashboard",
+        "Close ChatBot",
+        "Click on Billing menu",
+        "Verify Billing page loads successfully",
+        "Click on Daily Billing button",
+        "Verify DOS panel is visible on the left side",
+        "Verify DOS panel contains list of dates"
+      ],
+      "expectedResult": "DOS panel should be visible on the left side with list of dates",
+      "testData": "none"
     }
   ]
 }
