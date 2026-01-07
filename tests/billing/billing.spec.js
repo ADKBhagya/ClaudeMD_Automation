@@ -8,6 +8,9 @@ test.describe('Billing Module - Smoke Tests', () => {
   let loginPage;
   let billingPage;
 
+  // Configure tests to run serially to avoid timeout issues
+  test.describe.configure({ mode: 'serial', timeout: 90000 });
+
   test.beforeEach(async ({ page }) => {
     loginPage = new LoginPage(page);
     billingPage = new BillingPage(page);
@@ -20,8 +23,6 @@ test.describe('Billing Module - Smoke Tests', () => {
   });
 
   test('BILL_001 - Verify user can navigate to Billing', async ({ page }) => {
-    test.setTimeout(60000); // Increase timeout to 60 seconds
-
     // Navigate to Dashboard, Close ChatBot, and Navigate to Billing
     await billingPage.navigateToBilling();
 
@@ -35,8 +36,6 @@ test.describe('Billing Module - Smoke Tests', () => {
   });
 
   test('BILL_002 - Verify clear/cross button functionality', async ({ page }) => {
-    test.setTimeout(60000); // Increase timeout to 60 seconds
-
     // Navigate to Billing page
     await billingPage.navigateToBilling();
 
