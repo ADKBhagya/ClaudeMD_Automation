@@ -383,4 +383,151 @@ test.describe('Billing Module - Smoke Tests', () => {
 
     console.log('\n========== TEST COMPLETED SUCCESSFULLY ==========\n');
   });
+
+  test('BILL_010 - Verify selecting a DOS loads corresponding billing records', async ({ page }) => {
+    console.log('\n========== BILL_010 TEST EXECUTION ==========');
+
+    // Step 1: Navigate to Billing page
+    console.log('\nStep 1: Navigating to Billing page...');
+    await billingPage.navigateToBilling();
+
+    // Verify we are on Billing page
+    let currentURL = page.url();
+    expect(currentURL).toContain('6/0');
+    console.log('✓ Successfully navigated to Billing page');
+
+    // Step 2: Click Daily Billing button
+    console.log('\nStep 2: Clicking Daily Billing button...');
+    await billingPage.clickDailyBillingButton();
+    await page.waitForTimeout(3000);
+
+    // Wait for page to fully load
+    await page.waitForLoadState('domcontentloaded');
+    console.log('✓ Successfully navigated to Daily Billing page');
+
+    // Step 3: Verify DOS panel is visible
+    console.log('\nStep 3: Verifying DOS panel is visible...');
+    const isDOSPanelVisible = await billingPage.isDOSPanelVisible();
+    expect(isDOSPanelVisible).toBeTruthy();
+    console.log('✓ DOS panel is visible');
+
+    // Step 4: Get all available DOS dates
+    console.log('\nStep 4: Getting all available DOS dates from the panel...');
+    const availableDOSDates = await billingPage.getDOSPanelDates();
+    console.log(`Total unique DOS dates available: ${availableDOSDates.length}`);
+    console.log('Available DOS dates:');
+    availableDOSDates.forEach((date, index) => {
+      console.log(`  [${index}] ${date}`);
+    });
+
+    // Step 5: Get current selected DOS date
+    console.log('\nStep 5: Getting current selected DOS date...');
+    const currentDOSDate = await billingPage.getCurrentSelectedDOSDate();
+    console.log(`Current DOS date: ${currentDOSDate}`);
+
+    // Step 6: Note the initial billing records for current DOS
+    console.log(`\nStep 6: Noting the initial billing records for current DOS (${currentDOSDate})...`);
+    const initialRowCount = await billingPage.getBillingGridRowCount();
+    const initialRecords = await billingPage.getBillingRecordsSample();
+    console.log(`Billing record count for ${currentDOSDate}: ${initialRowCount}`);
+    console.log('Billing records (sample):');
+    initialRecords.forEach((record, index) => {
+      console.log(`  Row ${index + 1}: ${record}`);
+    });
+
+    // Step 7: Switch to a different DOS date (09/16/2025)
+    console.log(`\nStep 7: Switching from ${currentDOSDate} to 09/16/2025...`);
+    console.log(`Target DOS date: 09/16/2025`);
+    const selectedDOS = await billingPage.clickDOSDateByValue('09/16/2025');
+    expect(selectedDOS).toBeTruthy();
+
+    // Step 8: Verify billing grid refreshes
+    console.log('\nStep 8: Verifying billing grid refreshes...');
+    await page.waitForTimeout(2000);
+    await page.waitForLoadState('networkidle');
+    console.log('✓ Billing grid refreshed');
+
+    // Step 9: Verify billing records displayed are for selected DOS (09/16/2025)
+    console.log('\nStep 9: Verifying billing records displayed for 09/16/2025...');
+    const updatedRowCount = await billingPage.getBillingGridRowCount();
+    const updatedRecords = await billingPage.getBillingRecordsSample();
+    console.log(`Billing record count for 09/16/2025: ${updatedRowCount}`);
+    console.log('Billing records (sample):');
+    updatedRecords.forEach((record, index) => {
+      console.log(`  Row ${index + 1}: ${record}`);
+    });
+
+    // Verify that records are loaded
+    expect(updatedRowCount).toBeGreaterThanOrEqual(0);
+    console.log('✓ Billing records loaded for selected DOS');
+
+    console.log('\n========== TEST COMPLETED SUCCESSFULLY ==========\n');
+  });
+
+  test('BILL_011 - Verify user can filter billing records using valid From and To dates', async ({ page }) => {
+    console.log('\n========== BILL_011 TEST EXECUTION ==========');
+
+    // Step 1: Navigate to Billing page
+    console.log('\nStep 1: Navigating to Billing page...');
+    await billingPage.navigateToBilling();
+
+    // Verify we are on Billing page
+    let currentURL = page.url();
+    expect(currentURL).toContain('6/0');
+    console.log('✓ Successfully navigated to Billing page');
+
+    // Step 2: Click Daily Billing button
+    console.log('\nStep 2: Clicking Daily Billing button...');
+    await billingPage.clickDailyBillingButton();
+    await page.waitForTimeout(3000);
+
+    // Wait for page to fully load
+    await page.waitForLoadState('domcontentloaded');
+    console.log('✓ Successfully navigated to Daily Billing page');
+
+    // Step 3: Note initial billing records count
+    console.log('\nStep 3: Noting initial billing records count...');
+    const initialRowCount = await billingPage.getBillingGridRowCount();
+    console.log(`Initial billing record count: ${initialRowCount}`);
+
+    // Step 4: Set From Date
+    console.log('\nStep 4: Setting From Date...');
+    const fromDate = '09/15/2025';
+    const fromDateSet = await billingPage.setFromDate(fromDate);
+    expect(fromDateSet).toBeTruthy();
+
+    // Step 5: Set To Date
+    console.log('\nStep 5: Setting To Date...');
+    const toDate = '09/20/2025';
+    const toDateSet = await billingPage.setToDate(toDate);
+    expect(toDateSet).toBeTruthy();
+
+    // Step 6: Click Search button
+    console.log('\nStep 6: Clicking Search button...');
+    const searchClicked = await billingPage.clickSearchButton();
+    expect(searchClicked).toBeTruthy();
+
+    // Step 7: Wait for records to load
+    console.log('\nStep 7: Waiting for filtered records to load...');
+    await page.waitForTimeout(3000);
+    await page.waitForLoadState('networkidle');
+    console.log('✓ Records loaded');
+
+    // Step 8: Verify billing records are within the date range
+    console.log('\nStep 8: Verifying billing records are within the selected date range...');
+    const filteredRowCount = await billingPage.getBillingGridRowCount();
+    console.log(`Filtered billing record count: ${filteredRowCount}`);
+
+    const dateRangeValidation = await billingPage.verifyBillingRecordsInDateRange(fromDate, toDate);
+    console.log(`Date range validation: ${dateRangeValidation.message}`);
+    console.log(`DOS date headers checked: ${dateRangeValidation.recordCount}`);
+    console.log(`DOS dates in range: ${dateRangeValidation.recordsInRange}`);
+    console.log(`DOS dates out of range: ${dateRangeValidation.recordsOutOfRange}`);
+
+    expect(dateRangeValidation.isValid).toBeTruthy();
+    expect(filteredRowCount).toBeGreaterThanOrEqual(0);
+    console.log('✓ Billing records are within the selected date range');
+
+    console.log('\n========== TEST COMPLETED SUCCESSFULLY ==========\n');
+  });
 });

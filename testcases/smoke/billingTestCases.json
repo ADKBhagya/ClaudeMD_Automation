@@ -162,6 +162,47 @@
       ],
       "expectedResult": "DOS panel should be visible on the left side with list of dates",
       "testData": "none"
+    },
+    {
+      "id": "BILL_010",
+      "title": "Verify selecting a DOS loads corresponding billing records",
+      "priority": "High",
+      "category": "Functional Positive",
+      "steps": [
+        "Login with valid credentials",
+        "Navigate to Dashboard",
+        "Close ChatBot",
+        "Click on Billing menu",
+        "Verify Billing page loads successfully",
+        "Click on Daily Billing button",
+        "Verify DOS panel is visible",
+        "Note the initial billing records",
+        "Click on a DOS date from the panel",
+        "Verify billing grid refreshes",
+        "Verify billing records displayed are for selected DOS"
+      ],
+      "expectedResult": "Billing grid should refresh and display records for selected DOS",
+      "testData": "Valid DOS date"
+    },
+    {
+      "id": "BILL_011",
+      "title": "Verify user can filter billing records using valid From and To dates",
+      "priority": "High",
+      "category": "Functional Positive",
+      "steps": [
+        "Login with valid credentials",
+        "Navigate to Dashboard",
+        "Close ChatBot",
+        "Click on Billing menu",
+        "Verify Billing page loads successfully",
+        "Click on Daily Billing button",
+        "Select a valid From date",
+        "Select a valid To date",
+        "Click Search icon",
+        "Verify billing records within the selected date range are displayed"
+      ],
+      "expectedResult": "Billing records within the selected date range should be displayed correctly",
+      "testData": "Valid date range"
     }
   ]
 }

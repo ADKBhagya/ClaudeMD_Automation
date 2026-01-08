@@ -21,6 +21,12 @@ class BillingPage extends BasePage {
     this.clinicDropdownTrigger = 'xpath=//p-dropdown//span[@class="p-dropdown-trigger-icon"] | //div[contains(@class, "p-dropdown-trigger")]';
     this.clinicDropdownOptions = 'xpath=//li[contains(@class, "p-dropdown-item")]';
 
+    // Date Range Filters
+    this.fromDateInput = 'xpath=/html/body/ng-component/div/div/aeliusmd-billing-daily-board/div/div/p-toolbar/div/div[1]/div/div[3]/div/div[2]/div/input';
+    this.toDateInput = 'xpath=/html/body/ng-component/div/div/aeliusmd-billing-daily-board/div/div/p-toolbar/div/div[1]/div/div[3]/div/div[4]/div/input';
+    this.dateRangeClearButton = 'xpath=/html/body/ng-component/div/div/aeliusmd-billing-daily-board/div/div/p-toolbar/div/div[1]/div/div[3]/div/div[5]/button[2]';
+    this.searchButton = 'xpath=/html/body/ng-component/div/div/aeliusmd-billing-daily-board/div/div/p-toolbar/div/div[1]/div/div[3]/div/div[5]/button[1]';
+
     // DOS Panel
     this.dosPanel = 'xpath=//div[contains(@class, "dos-panel") or contains(@class, "date-panel") or contains(@class, "left-panel")]';
   }
@@ -206,19 +212,259 @@ class BillingPage extends BasePage {
       // Look for date patterns in the page
       const dateElements = await this.page.locator('div, span, li').filter({ hasText: /\d{2}\/\d{2}\/\d{4}/ }).all();
       const dates = [];
+      const uniqueDates = new Set();
 
-      for (let i = 0; i < Math.min(5, dateElements.length); i++) {
+      for (let i = 0; i < dateElements.length; i++) {
         const dateText = await dateElements[i].textContent();
         const dateMatch = dateText?.match(/\d{2}\/\d{2}\/\d{4}/);
         if (dateMatch) {
-          dates.push(dateMatch[0]);
+          uniqueDates.add(dateMatch[0]);
         }
       }
 
-      return dates;
+      return Array.from(uniqueDates);
     } catch (error) {
       console.log(`Error getting DOS panel dates: ${error.message}`);
       return [];
+    }
+  }
+
+  async getCurrentSelectedDOSDate() {
+    try {
+      await this.waitForTimeout(1000);
+      // Look for the selected/active DOS date in the panel
+      const selectedDate = await this.page.locator('div[class*="active"], li[class*="active"], .selected, [aria-selected="true"]').filter({ hasText: /\d{2}\/\d{2}\/\d{4}/ }).first();
+
+      if (await selectedDate.isVisible({ timeout: 3000 }).catch(() => false)) {
+        const dateText = await selectedDate.textContent();
+        const dateMatch = dateText?.match(/\d{2}\/\d{2}\/\d{4}/);
+        if (dateMatch) {
+          return dateMatch[0];
+        }
+      }
+
+      // If no active/selected element found, try to get from the billing records
+      const firstRecord = await this.page.locator('table tbody tr, .p-datatable-tbody tr, .grid-row').first();
+      if (await firstRecord.isVisible({ timeout: 3000 }).catch(() => false)) {
+        const recordText = await firstRecord.textContent();
+        const dateMatch = recordText?.match(/\d{2}\/\d{2}\/\d{4}/);
+        if (dateMatch) {
+          return dateMatch[0];
+        }
+      }
+
+      return 'Unknown';
+    } catch (error) {
+      console.log(`Error getting current selected DOS date: ${error.message}`);
+      return 'Unknown';
+    }
+  }
+
+  async clickDOSDate(dateIndex = 0) {
+    try {
+      await this.waitForTimeout(2000);
+      // Find all date elements
+      const dateElements = await this.page.locator('div, span, li, button').filter({ hasText: /\d{2}\/\d{2}\/\d{4}/ }).all();
+
+      if (dateElements.length === 0) {
+        console.log('No DOS dates found to click');
+        return null;
+      }
+
+      // Click on the specified date (default first one)
+      const targetIndex = Math.min(dateIndex, dateElements.length - 1);
+      const dateText = await dateElements[targetIndex].textContent();
+      const dateMatch = dateText?.match(/\d{2}\/\d{2}\/\d{4}/);
+
+      if (dateMatch) {
+        console.log(`Clicking on DOS date: ${dateMatch[0]}`);
+        await dateElements[targetIndex].click({ timeout: 5000 });
+        await this.waitForTimeout(2000);
+        return dateMatch[0];
+      }
+
+      return null;
+    } catch (error) {
+      console.log(`Error clicking DOS date: ${error.message}`);
+      return null;
+    }
+  }
+
+  async clickDOSDateByValue(targetDate) {
+    try {
+      await this.waitForTimeout(2000);
+      // Find all date elements
+      const dateElements = await this.page.locator('div, span, li, button').filter({ hasText: /\d{2}\/\d{2}\/\d{4}/ }).all();
+
+      if (dateElements.length === 0) {
+        console.log('No DOS dates found to click');
+        return null;
+      }
+
+      console.log(`Searching for DOS date: ${targetDate}`);
+
+      // Find the element that contains the target date
+      for (let i = 0; i < dateElements.length; i++) {
+        const dateText = await dateElements[i].textContent();
+        const dateMatch = dateText?.match(/\d{2}\/\d{2}\/\d{4}/);
+
+        if (dateMatch && dateMatch[0] === targetDate) {
+          console.log(`Found DOS date at index [${i}]: ${dateMatch[0]}`);
+          await dateElements[i].click({ timeout: 5000 });
+          await this.waitForTimeout(2000);
+          console.log(`✓ Clicked on DOS date: ${dateMatch[0]}`);
+          return dateMatch[0];
+        }
+      }
+
+      console.log(`DOS date ${targetDate} not found. Available dates:`);
+      for (let i = 0; i < Math.min(10, dateElements.length); i++) {
+        const dateText = await dateElements[i].textContent();
+        const dateMatch = dateText?.match(/\d{2}\/\d{2}\/\d{4}/);
+        if (dateMatch) {
+          console.log(`  [${i}] ${dateMatch[0]}`);
+        }
+      }
+
+      return null;
+    } catch (error) {
+      console.log(`Error clicking DOS date by value: ${error.message}`);
+      return null;
+    }
+  }
+
+  async setFromDate(dateValue) {
+    try {
+      await this.waitForTimeout(1000);
+      console.log(`Setting From Date: ${dateValue}`);
+
+      // Click on the From Date field
+      await this.click(this.fromDateInput);
+      await this.waitForTimeout(500);
+
+      // Clear the field
+      await this.page.locator(this.fromDateInput).fill('');
+      await this.waitForTimeout(500);
+
+      // Enter the date value
+      await this.page.locator(this.fromDateInput).fill(dateValue);
+      await this.waitForTimeout(500);
+
+      // Press Enter to confirm
+      await this.page.locator(this.fromDateInput).press('Enter');
+      await this.waitForTimeout(1000);
+
+      console.log(`✓ From Date set to: ${dateValue}`);
+      return true;
+    } catch (error) {
+      console.log(`Error setting From Date: ${error.message}`);
+      return false;
+    }
+  }
+
+  async setToDate(dateValue) {
+    try {
+      await this.waitForTimeout(1000);
+      console.log(`Setting To Date: ${dateValue}`);
+
+      // Click on the To Date field
+      await this.click(this.toDateInput);
+      await this.waitForTimeout(500);
+
+      // Clear the field
+      await this.page.locator(this.toDateInput).fill('');
+      await this.waitForTimeout(500);
+
+      // Enter the date value
+      await this.page.locator(this.toDateInput).fill(dateValue);
+      await this.waitForTimeout(500);
+
+      // Press Enter to confirm
+      await this.page.locator(this.toDateInput).press('Enter');
+      await this.waitForTimeout(1000);
+
+      console.log(`✓ To Date set to: ${dateValue}`);
+      return true;
+    } catch (error) {
+      console.log(`Error setting To Date: ${error.message}`);
+      return false;
+    }
+  }
+
+  async clickSearchButton() {
+    try {
+      await this.waitForTimeout(1000);
+      console.log('Clicking Search button...');
+      await this.click(this.searchButton);
+      await this.waitForTimeout(2000);
+      console.log('✓ Search button clicked');
+      return true;
+    } catch (error) {
+      console.log(`Error clicking Search button: ${error.message}`);
+      return false;
+    }
+  }
+
+  async verifyBillingRecordsInDateRange(fromDate, toDate) {
+    try {
+      await this.waitForTimeout(2000);
+
+      // Get billing records from the specific container using XPath
+      const billingContainer = await this.page.locator('xpath=/html/body/ng-component/div/div/aeliusmd-billing-daily-board/div/div/div/div/aeliusmd-billing-injury-daily-board/div/div/div/div/div[1]/div');
+
+      // Get all rows within the container
+      const rows = await billingContainer.locator('table tbody tr, .p-datatable-tbody tr').all();
+
+      if (rows.length === 0) {
+        console.log('No billing records found in DOS container');
+        return { isValid: true, recordCount: 0, message: 'No records to validate' };
+      }
+
+      console.log(`Total rows in DOS container: ${rows.length}`);
+
+      // Parse the date range
+      const fromDateObj = new Date(fromDate);
+      const toDateObj = new Date(toDate);
+
+      let recordsInRange = 0;
+      let recordsOutOfRange = 0;
+      let dosHeadersChecked = 0;
+
+      // Check all rows - look for DOS date header rows (single cell rows with dates)
+      for (let i = 0; i < rows.length; i++) {
+        const cells = await rows[i].locator('td').all();
+
+        // Process DOS date header rows (single cell rows containing dates)
+        if (cells.length === 1) {
+          dosHeadersChecked++;
+
+          const dosText = await cells[0].textContent();
+          const dateMatch = dosText?.trim().match(/\d{2}\/\d{2}\/\d{4}/);
+
+          if (dateMatch) {
+            const recordDate = new Date(dateMatch[0]);
+
+            if (recordDate >= fromDateObj && recordDate <= toDateObj) {
+              recordsInRange++;
+            } else {
+              recordsOutOfRange++;
+              console.log(`WARNING: DOS date OUT OF RANGE: ${dateMatch[0]}`);
+            }
+          }
+        }
+      }
+
+      return {
+        isValid: recordsOutOfRange === 0,
+        recordCount: dosHeadersChecked,
+        sampledRecords: dosHeadersChecked,
+        recordsInRange,
+        recordsOutOfRange,
+        message: recordsOutOfRange === 0 ? 'All DOS dates are within date range' : `${recordsOutOfRange} DOS dates out of date range`
+      };
+    } catch (error) {
+      console.log(`Error verifying billing records date range: ${error.message}`);
+      return { isValid: false, recordCount: 0, message: error.message };
     }
   }
 }
