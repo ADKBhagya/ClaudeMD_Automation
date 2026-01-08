@@ -24,6 +24,9 @@ class BillingPage extends BasePage {
     // Date Range Filters
     this.fromDateInput = 'xpath=/html/body/ng-component/div/div/aeliusmd-billing-daily-board/div/div/p-toolbar/div/div[1]/div/div[3]/div/div[2]/div/input';
     this.toDateInput = 'xpath=/html/body/ng-component/div/div/aeliusmd-billing-daily-board/div/div/p-toolbar/div/div[1]/div/div[3]/div/div[4]/div/input';
+    this.fromDateCalendarIcon = 'xpath=/html/body/ng-component/div/div/aeliusmd-billing-daily-board/div/div/p-toolbar/div/div[1]/div/div[3]/div/div[2]/div/button';
+    this.toDateCalendarIcon = 'xpath=/html/body/ng-component/div/div/aeliusmd-billing-daily-board/div/div/p-toolbar/div/div[1]/div/div[3]/div/div[4]/div/button';
+    this.datePickerPanel = '.p-datepicker, .p-calendar-panel, [role="dialog"].p-component';
     this.dateRangeClearButton = 'xpath=/html/body/ng-component/div/div/aeliusmd-billing-daily-board/div/div/p-toolbar/div/div[1]/div/div[3]/div/div[5]/button[2]';
     this.searchButton = 'xpath=/html/body/ng-component/div/div/aeliusmd-billing-daily-board/div/div/p-toolbar/div/div[1]/div/div[3]/div/div[5]/button[1]';
 
@@ -402,6 +405,93 @@ class BillingPage extends BasePage {
     } catch (error) {
       console.log(`Error clicking Search button: ${error.message}`);
       return false;
+    }
+  }
+
+  async clickFromDateCalendarIcon() {
+    try {
+      await this.waitForTimeout(1000);
+      console.log('Clicking From Date calendar icon...');
+      await this.click(this.fromDateCalendarIcon);
+      await this.waitForTimeout(1000);
+      console.log('✓ From Date calendar icon clicked');
+      return true;
+    } catch (error) {
+      console.log(`Error clicking From Date calendar icon: ${error.message}`);
+      return false;
+    }
+  }
+
+  async clickToDateCalendarIcon() {
+    try {
+      await this.waitForTimeout(1000);
+      console.log('Clicking To Date calendar icon...');
+      await this.click(this.toDateCalendarIcon);
+      await this.waitForTimeout(1000);
+      console.log('✓ To Date calendar icon clicked');
+      return true;
+    } catch (error) {
+      console.log(`Error clicking To Date calendar icon: ${error.message}`);
+      return false;
+    }
+  }
+
+  async isDatePickerVisible() {
+    try {
+      await this.waitForTimeout(500);
+      const datePickerVisible = await this.page.locator(this.datePickerPanel).isVisible({ timeout: 5000 });
+      return datePickerVisible;
+    } catch (error) {
+      console.log(`Error checking date picker visibility: ${error.message}`);
+      return false;
+    }
+  }
+
+  async selectDateFromPicker(day) {
+    try {
+      await this.waitForTimeout(1000);
+      console.log(`Selecting day ${day} from date picker...`);
+
+      // Wait for date picker to be visible
+      await this.page.locator(this.datePickerPanel).waitFor({ state: 'visible', timeout: 5000 });
+
+      // Find and click the date cell with the specific day
+      // Try multiple selectors for date cells
+      const dateCell = this.page.locator(`
+        ${this.datePickerPanel} td:not(.p-datepicker-other-month) span:has-text("${day}"),
+        ${this.datePickerPanel} .p-datepicker-calendar td:not(.p-disabled) span:text-is("${day}"),
+        ${this.datePickerPanel} [role="gridcell"]:not([data-p-disabled="true"]) span:text-is("${day}")
+      `).first();
+
+      await dateCell.click({ timeout: 5000 });
+      await this.waitForTimeout(1000);
+      console.log(`✓ Selected day ${day} from date picker`);
+      return true;
+    } catch (error) {
+      console.log(`Error selecting date from picker: ${error.message}`);
+      return false;
+    }
+  }
+
+  async getFromDateValue() {
+    try {
+      await this.waitForTimeout(500);
+      const value = await this.page.locator(this.fromDateInput).inputValue();
+      return value;
+    } catch (error) {
+      console.log(`Error getting From Date value: ${error.message}`);
+      return '';
+    }
+  }
+
+  async getToDateValue() {
+    try {
+      await this.waitForTimeout(500);
+      const value = await this.page.locator(this.toDateInput).inputValue();
+      return value;
+    } catch (error) {
+      console.log(`Error getting To Date value: ${error.message}`);
+      return '';
     }
   }
 

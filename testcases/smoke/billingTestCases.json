@@ -203,6 +203,34 @@
       ],
       "expectedResult": "Billing records within the selected date range should be displayed correctly",
       "testData": "Valid date range"
+    },
+    {
+      "id": "BILL_012",
+      "title": "Verify calendar icon opens date picker for From and To fields and can select dates from that",
+      "priority": "Medium",
+      "category": "Functional Positive",
+      "steps": [
+        "Login with valid credentials",
+        "Navigate to Dashboard",
+        "Close ChatBot",
+        "Click on Billing menu",
+        "Verify Billing page loads successfully",
+        "Click on Daily Billing button",
+        "Click calendar icon for From date",
+        "Verify date picker opens",
+        "Navigate to December 2025 in date picker",
+        "Select day 15 from the date picker",
+        "Verify selected date (12/15/2025) is displayed in From field",
+        "Click calendar icon for To date",
+        "Verify date picker opens",
+        "Navigate to January 2026 in date picker",
+        "Select day 5 from the date picker",
+        "Verify selected date (01/05/2026) is displayed in To field",
+        "Click Search button to apply filters",
+        "Verify billing records are filtered based on selected date range (12/15/2025 to 01/05/2026)"
+      ],
+      "expectedResult": "Date picker should open for both From and To fields, dates can be selected correctly from the picker (From: 12/15/2025, To: 01/05/2026), and billing records should be filtered based on the selected date range",
+      "testData": "From Date: 12/15/2025, To Date: 01/05/2026"
     }
   ]
 }

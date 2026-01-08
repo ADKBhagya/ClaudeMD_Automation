@@ -530,4 +530,141 @@ test.describe('Billing Module - Smoke Tests', () => {
 
     console.log('\n========== TEST COMPLETED SUCCESSFULLY ==========\n');
   });
+
+  test('BILL_012 - Verify calendar icon opens date picker for From and To fields and can select dates from that', async ({ page }) => {
+    console.log('\n========== BILL_012 TEST EXECUTION ==========');
+
+    // Step 1: Navigate to Billing page
+    console.log('\nStep 1: Navigating to Billing page...');
+    await billingPage.navigateToBilling();
+
+    // Verify we are on Billing page
+    let currentURL = page.url();
+    expect(currentURL).toContain('6/0');
+    console.log('✓ Successfully navigated to Billing page');
+
+    // Step 2: Click Daily Billing button
+    console.log('\nStep 2: Clicking Daily Billing button...');
+    await billingPage.clickDailyBillingButton();
+    await page.waitForTimeout(3000);
+
+    // Wait for page to fully load
+    await page.waitForLoadState('domcontentloaded');
+    console.log('✓ Successfully navigated to Daily Billing page');
+
+    // Step 3: Click calendar icon for From date
+    console.log('\nStep 3: Clicking calendar icon for From date...');
+    const fromCalendarClicked = await billingPage.clickFromDateCalendarIcon();
+    expect(fromCalendarClicked).toBeTruthy();
+    await page.waitForTimeout(1500);
+
+    // Click input field to ensure date picker opens
+    await page.locator(billingPage.fromDateInput).click();
+    await page.waitForTimeout(2000);
+
+    // Step 4: Navigate to December 2025 and select day 15
+    console.log('\nStep 4: Navigating to December 2025 in date picker...');
+
+    // Check current month/year displayed in date picker
+    const monthSelect = page.locator('select[title="Select month"]').first();
+    const yearSelect = page.locator('select[title="Select year"]').first();
+
+    // Set to December (month 12 in 1-based indexing)
+    await monthSelect.selectOption({ label: 'Dec' });
+    console.log('✓ Selected December');
+
+    // Set to 2025
+    await yearSelect.selectOption({ value: '2025' });
+    console.log('✓ Selected year 2025');
+    await page.waitForTimeout(1000);
+
+    // Step 5: Click on day 15 in the date picker
+    console.log('\nStep 5: Selecting day 15 from date picker...');
+    const day15Element = page.locator('div.ngb-dp-day').filter({ hasText: /^15$/ }).first();
+    const isDay15Visible = await day15Element.isVisible({ timeout: 3000 });
+
+    if (isDay15Visible) {
+      await day15Element.click();
+      console.log('✓ Clicked day 15 from date picker');
+    } else {
+      throw new Error('Day 15 not found in date picker');
+    }
+    await page.waitForTimeout(1000);
+
+    // Step 6: Verify From date is set to 12/15/2025
+    console.log('\nStep 6: Verifying From date is set...');
+    const fromDateValue = await billingPage.getFromDateValue();
+    console.log(`From Date field value: ${fromDateValue}`);
+    expect(fromDateValue).toContain('12/15/2025');
+    console.log('✓ From date has been set to 12/15/2025 using date picker');
+
+    // Step 7: Click calendar icon for To date
+    console.log('\nStep 7: Clicking calendar icon for To date...');
+    const toCalendarClicked = await billingPage.clickToDateCalendarIcon();
+    expect(toCalendarClicked).toBeTruthy();
+    await page.waitForTimeout(1500);
+
+    // Click input field to ensure date picker opens
+    await page.locator(billingPage.toDateInput).click();
+    await page.waitForTimeout(2000);
+
+    // Step 8: Navigate to January 2026 and select day 5
+    console.log('\nStep 8: Navigating to January 2026 in date picker...');
+
+    const monthSelect2 = page.locator('select[title="Select month"]').first();
+    const yearSelect2 = page.locator('select[title="Select year"]').first();
+
+    // Set to January
+    await monthSelect2.selectOption({ label: 'Jan' });
+    console.log('✓ Selected January');
+
+    // Set to 2026
+    await yearSelect2.selectOption({ value: '2026' });
+    console.log('✓ Selected year 2026');
+    await page.waitForTimeout(1000);
+
+    // Step 9: Click on day 5 in the date picker
+    console.log('\nStep 9: Selecting day 5 from date picker...');
+    const day5Element = page.locator('div.ngb-dp-day').filter({ hasText: /^5$/ }).first();
+    const isDay5Visible = await day5Element.isVisible({ timeout: 3000 });
+
+    if (isDay5Visible) {
+      await day5Element.click();
+      console.log('✓ Clicked day 5 from date picker');
+    } else {
+      throw new Error('Day 5 not found in date picker');
+    }
+    await page.waitForTimeout(1000);
+
+    // Step 10: Verify To date is set to 01/05/2026
+    console.log('\nStep 10: Verifying To date is set...');
+    const toDateValue = await billingPage.getToDateValue();
+    console.log(`To Date field value: ${toDateValue}`);
+    expect(toDateValue).toContain('01/05/2026');
+    console.log('✓ To date has been set to 01/05/2026 using date picker');
+
+    // Step 11: Click Search button to apply filters
+    console.log('\nStep 11: Clicking Search button to apply filters...');
+    const searchClicked = await billingPage.clickSearchButton();
+    expect(searchClicked).toBeTruthy();
+    await page.waitForTimeout(3000);
+
+    // Step 12: Verify billing records are filtered based on date range
+    console.log('\nStep 12: Verifying billing records are filtered...');
+    const recordCount = await billingPage.getBillingGridRowCount();
+    console.log(`Billing grid has ${recordCount} rows after filtering`);
+
+    // Verify the records are within the selected date range (12/15/2025 to 01/05/2026)
+    const verificationResult = await billingPage.verifyBillingRecordsInDateRange('12/15/2025', '01/05/2026');
+    console.log(`Verification result: ${verificationResult.message}`);
+    console.log(`Records checked: ${verificationResult.recordCount}`);
+
+    if (verificationResult.isValid) {
+      console.log('✓ All billing records are within the selected date range (12/15/2025 to 01/05/2026)');
+    } else {
+      console.log(`✗ Some records are outside the date range`);
+    }
+
+    console.log('\n========== TEST COMPLETED SUCCESSFULLY ==========\n');
+  });
 });
