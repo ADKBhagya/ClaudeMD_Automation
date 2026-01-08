@@ -231,6 +231,28 @@
       ],
       "expectedResult": "Date picker should open for both From and To fields, dates can be selected correctly from the picker (From: 12/15/2025, To: 01/05/2026), and billing records should be filtered based on the selected date range",
       "testData": "From Date: 12/15/2025, To Date: 01/05/2026"
+    },
+    {
+      "id": "BILL_013",
+      "title": "Verify system behavior when To date is earlier than From date",
+      "priority": "High",
+      "category": "Functional Negative",
+      "steps": [
+        "Login with valid credentials",
+        "Navigate to Dashboard",
+        "Close ChatBot",
+        "Click on Billing menu",
+        "Verify Billing page loads successfully",
+        "Click on Daily Billing button",
+        "Set From date to 01/15/2026",
+        "Set To date to 12/15/2025 (earlier than From date)",
+        "Click Search button",
+        "Verify system behavior - check for error messages or validation",
+        "Verify system does not crash and remains responsive",
+        "Verify search results"
+      ],
+      "expectedResult": "System should handle invalid date range gracefully - either display validation error or return empty result set without crashing",
+      "testData": "From Date: 01/15/2026, To Date: 12/15/2025 (invalid range)"
     }
   ]
 }

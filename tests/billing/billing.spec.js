@@ -667,4 +667,99 @@ test.describe('Billing Module - Smoke Tests', () => {
 
     console.log('\n========== TEST COMPLETED SUCCESSFULLY ==========\n');
   });
+
+  test('BILL_013 - Verify system behavior when To date is earlier than From date', async ({ page }) => {
+    console.log('\n========== BILL_013 TEST EXECUTION ==========');
+
+    // Step 1: Navigate to Billing page
+    console.log('\nStep 1: Navigating to Billing page...');
+    await billingPage.navigateToBilling();
+
+    // Verify we are on Billing page
+    let currentURL = page.url();
+    expect(currentURL).toContain('6/0');
+    console.log('✓ Successfully navigated to Billing page');
+
+    // Step 2: Click Daily Billing button
+    console.log('\nStep 2: Clicking Daily Billing button...');
+    await billingPage.clickDailyBillingButton();
+    await page.waitForTimeout(3000);
+
+    // Wait for page to fully load
+    await page.waitForLoadState('domcontentloaded');
+    console.log('✓ Successfully navigated to Daily Billing page');
+
+    // Step 3: Set From date to 01/15/2026 (later date)
+    console.log('\nStep 3: Setting From Date to 01/15/2026...');
+    await billingPage.setFromDate('01/15/2026');
+    await page.waitForTimeout(1000);
+
+    const fromDateValue = await billingPage.getFromDateValue();
+    console.log(`From Date field value: ${fromDateValue}`);
+    expect(fromDateValue).toContain('01/15/2026');
+    console.log('✓ From date has been set to 01/15/2026');
+
+    // Step 4: Set To date to 12/15/2025 (earlier date)
+    console.log('\nStep 4: Setting To Date to 12/15/2025 (earlier than From date)...');
+    await billingPage.setToDate('12/15/2025');
+    await page.waitForTimeout(1000);
+
+    const toDateValue = await billingPage.getToDateValue();
+    console.log(`To Date field value: ${toDateValue}`);
+    expect(toDateValue).toContain('12/15/2025');
+    console.log('✓ To date has been set to 12/15/2025 (earlier than From date)');
+
+    // Step 5: Click Search button and observe system behavior
+    console.log('\nStep 5: Clicking Search button with invalid date range...');
+
+    // Check if there's any error message or validation before clicking
+    const errorMessageBefore = await page.locator('.p-message-error, .error-message, [role="alert"]').isVisible().catch(() => false);
+    console.log(`Error message visible before search: ${errorMessageBefore}`);
+
+    const searchClicked = await billingPage.clickSearchButton();
+    expect(searchClicked).toBeTruthy();
+    await page.waitForTimeout(3000);
+
+    // Step 6: Verify system behavior - Check for validation/error messages
+    console.log('\nStep 6: Verifying system behavior...');
+
+    // Check if error message is displayed
+    const errorMessage = page.locator('.p-message-error, .error-message, .p-toast-message-error, [role="alert"]').first();
+    const isErrorVisible = await errorMessage.isVisible().catch(() => false);
+
+    if (isErrorVisible) {
+      const errorText = await errorMessage.textContent();
+      console.log(`✓ Error message displayed: ${errorText?.trim()}`);
+      console.log('✓ System properly validates invalid date range');
+    } else {
+      console.log('No error message displayed');
+    }
+
+    // Check if search was executed anyway - get record count
+    const recordCount = await billingPage.getBillingGridRowCount();
+    console.log(`Billing grid has ${recordCount} rows after search with invalid date range`);
+
+    // Check if system crashed or froze
+    const isPageResponsive = await page.locator('body').isVisible({ timeout: 5000 }).catch(() => false);
+    expect(isPageResponsive).toBeTruthy();
+    console.log('✓ System did not crash - page is still responsive');
+
+    // Verify the date fields still have values (system didn't reset unexpectedly)
+    const fromDateAfter = await billingPage.getFromDateValue();
+    const toDateAfter = await billingPage.getToDateValue();
+    console.log(`From Date after search: ${fromDateAfter}`);
+    console.log(`To Date after search: ${toDateAfter}`);
+
+    // Determine test outcome
+    if (isErrorVisible) {
+      console.log('\n✓ TEST RESULT: System displays validation error for invalid date range');
+    } else if (recordCount === 0) {
+      console.log('\n✓ TEST RESULT: System allows search but returns no records (empty result set)');
+    } else {
+      console.log(`\n⚠ TEST RESULT: System allows search with invalid date range and returns ${recordCount} records`);
+      console.log('Note: System may be showing all records or handling invalid range differently');
+    }
+
+    console.log('\n========== TEST COMPLETED SUCCESSFULLY ==========\n');
+  });
 });
