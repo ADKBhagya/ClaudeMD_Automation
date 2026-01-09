@@ -253,6 +253,46 @@
       ],
       "expectedResult": "System should handle invalid date range gracefully - either display validation error or return empty result set without crashing",
       "testData": "From Date: 01/15/2026, To Date: 12/15/2025 (invalid range)"
+    },
+    {
+      "id": "BILL_014",
+      "title": "Verify system behavior when invalid date format is manually entered",
+      "priority": "Medium",
+      "category": "Functional Negative",
+      "steps": [
+        "Login with valid credentials",
+        "Navigate to Dashboard",
+        "Close ChatBot",
+        "Click on Billing menu",
+        "Verify Billing page loads successfully",
+        "Click on Daily Billing button",
+        "Enter invalid date format to From date and To date",
+        "Click Search button",
+        "Verify system behavior and responsiveness"
+      ],
+      "expectedResult": "System should handle invalid date formats gracefully - clear invalid text input, show validation errors for partially valid formats, and continue search with valid date only",
+      "testData": "Invalid formats: '20-20-2025', '23-25-2000'"
+    },
+    {
+      "id": "BILL_015",
+      "title": "Verify clearing From and To date resets billing records",
+      "priority": "Medium",
+      "category": "Functional Alternative",
+      "steps": [
+        "Login with valid credentials",
+        "Navigate to Dashboard",
+        "Close ChatBot",
+        "Click on Billing menu",
+        "Verify Billing page loads successfully",
+        "Click on Daily Billing button",
+        "Apply valid From and To dates",
+        "Click Search button",
+        "Verify billing records are filtered",
+        "Clear dates fieldusing cross Cross button",
+        "Click Search button again"
+      ],
+      "expectedResult": "Billing grid should reset and display default records when date filters are cleared",
+      "testData": "none"
     }
   ]
 }

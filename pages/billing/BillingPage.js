@@ -495,6 +495,20 @@ class BillingPage extends BasePage {
     }
   }
 
+  async clickDateRangeClearButton() {
+    try {
+      await this.waitForTimeout(1000);
+      console.log('Clicking date range clear button (cross button)...');
+      await this.click(this.dateRangeClearButton);
+      await this.waitForTimeout(1000);
+      console.log('✓ Date range clear button clicked');
+      return true;
+    } catch (error) {
+      console.log(`Error clicking date range clear button: ${error.message}`);
+      return false;
+    }
+  }
+
   async verifyBillingRecordsInDateRange(fromDate, toDate) {
     try {
       await this.waitForTimeout(2000);
