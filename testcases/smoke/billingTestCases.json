@@ -368,6 +368,26 @@
       ],
       "expectedResult": "Date filtration should persist across Injury sub-tabs",
       "testData": "Valid date range"
+    },
+    {
+      "id": "BILL_020",
+      "title": "Verify date filtration resets when page is refreshed",
+      "priority": "Medium",
+      "category": "Functional Negative",
+      "steps": [
+        "Login with valid credentials",
+        "Navigate to Dashboard",
+        "Close ChatBot",
+        "Click on Billing menu",
+        "Verify Billing page loads successfully",
+        "Click on Daily Billing button",
+        "Apply valid From and To dates",
+        "Click Search button",
+        "Verify DOS correctly load with records",
+        "Refresh the browser page"
+      ],
+      "expectedResult": "Date filters should reset to default state after page refresh",
+      "testData": "Valid date range"
     }
   ]
 }

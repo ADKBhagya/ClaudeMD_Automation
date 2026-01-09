@@ -1500,4 +1500,131 @@ test.describe('Billing Module - Smoke Tests', () => {
 
     console.log('\n========== TEST COMPLETED SUCCESSFULLY ==========\n');
   });
+
+  test('BILL_020 - Verify date filtration resets when page is refreshed', async ({ page }) => {
+    console.log('\n========== BILL_020 TEST EXECUTION ==========');
+
+    // Step 1: Navigate to Billing page
+    console.log('\nStep 1: Navigating to Billing page...');
+    await billingPage.navigateToBilling();
+
+    // Verify we are on Billing page
+    let currentURL = page.url();
+    expect(currentURL).toContain('6/0');
+    console.log('✓ Successfully navigated to Billing page');
+
+    // Step 2: Click Daily Billing button
+    console.log('\nStep 2: Clicking Daily Billing button...');
+    await billingPage.clickDailyBillingButton();
+    await page.waitForTimeout(3000);
+
+    // Wait for page to fully load
+    await page.waitForLoadState('domcontentloaded');
+    console.log('✓ Successfully navigated to Daily Billing page');
+
+    // Step 3: Apply valid From and To dates
+    console.log('\nStep 3: Applying valid From and To dates...');
+    const fromDate = '09/15/2025';
+    const toDate = '09/20/2025';
+
+    await billingPage.setFromDate(fromDate);
+    console.log(`✓ From Date set to: ${fromDate}`);
+
+    await billingPage.setToDate(toDate);
+    console.log(`✓ To Date set to: ${toDate}`);
+
+    // Step 4: Click Search button
+    console.log('\nStep 4: Clicking Search button to apply filters...');
+    await billingPage.clickSearchButton();
+    await page.waitForTimeout(3000);
+    await page.waitForLoadState('networkidle');
+    console.log('✓ Search completed');
+
+    // Step 5: Verify billing records are filtered before refresh
+    console.log('\nStep 5: Verifying billing records are filtered before refresh...');
+    const filteredRowCount = await billingPage.getBillingGridRowCount();
+    console.log(`Filtered billing record count before refresh: ${filteredRowCount}`);
+
+    const dateRangeValidation = await billingPage.verifyBillingRecordsInDateRange(fromDate, toDate);
+    console.log(`Date range validation: ${dateRangeValidation.message}`);
+    expect(dateRangeValidation.isValid).toBeTruthy();
+    console.log('✓ Billing records are filtered correctly before refresh');
+
+    // Verify date values are set before refresh
+    const fromDateBefore = await billingPage.getFromDateValue();
+    const toDateBefore = await billingPage.getToDateValue();
+    console.log(`From Date before refresh: "${fromDateBefore}"`);
+    console.log(`To Date before refresh: "${toDateBefore}"`);
+    expect(fromDateBefore).toContain('09/15/2025');
+    expect(toDateBefore).toContain('09/20/2025');
+
+    // Step 6: Verify DOS correctly load with filtered records
+    console.log('\nStep 6: Verifying DOS correctly load with filtered records...');
+    const dosDatesBefore = await billingPage.getDOSPanelDates();
+    const dosCountBefore = dosDatesBefore.length;
+    console.log(`DOS panel record count before refresh: ${dosCountBefore}`);
+    console.log(`DOS dates before refresh: ${dosDatesBefore.join(', ')}`);
+    expect(dosCountBefore).toBeGreaterThan(0);
+    console.log('✓ DOS panel loaded correctly with filtered records');
+
+    // Step 7: Refresh the browser page
+    console.log('\nStep 7: Refreshing the browser page...');
+    await page.reload();
+    await page.waitForTimeout(3000);
+    await page.waitForLoadState('networkidle');
+    console.log('✓ Page refreshed successfully');
+
+    // Step 8: Verify date filters are reset to default state
+    console.log('\nStep 8: Verifying date filters are reset after refresh...');
+    const fromDateAfter = await billingPage.getFromDateValue();
+    const toDateAfter = await billingPage.getToDateValue();
+    console.log(`From Date after refresh: "${fromDateAfter}"`);
+    console.log(`To Date after refresh: "${toDateAfter}"`);
+
+    // Date fields should be empty or contain default placeholder values after refresh
+    const isFromDateReset = fromDateAfter === '' || fromDateAfter.includes('mm/dd/yyyy') || !fromDateAfter.includes('09/15/2025');
+    const isToDateReset = toDateAfter === '' || toDateAfter.includes('mm/dd/yyyy') || !toDateAfter.includes('09/20/2025');
+
+    expect(isFromDateReset).toBeTruthy();
+    expect(isToDateReset).toBeTruthy();
+    console.log('✓ Date filters have been reset to default state');
+
+    // Step 9: Verify billing records and DOS are restored to default state
+    console.log('\nStep 9: Verifying billing records and DOS are restored to default state...');
+    const rowCountAfterRefresh = await billingPage.getBillingGridRowCount();
+    console.log(`Billing record count after refresh: ${rowCountAfterRefresh}`);
+
+    // Verify DOS records are also restored to default
+    const dosDatesAfter = await billingPage.getDOSPanelDates();
+    const dosCountAfter = dosDatesAfter.length;
+    console.log(`DOS panel record count after refresh: ${dosCountAfter}`);
+    console.log(`DOS dates after refresh: ${dosDatesAfter.join(', ')}`);
+
+    // After refresh, record count should be different from filtered count (likely more records)
+    console.log(`Billing record count comparison - Before: ${filteredRowCount}, After: ${rowCountAfterRefresh}`);
+    console.log(`DOS record count comparison - Before: ${dosCountBefore}, After: ${dosCountAfter}`);
+
+    if (rowCountAfterRefresh !== filteredRowCount) {
+      console.log('✓ Billing records have been restored to default state (record count changed)');
+    } else {
+      console.log('⚠ Billing records count remained the same (may indicate same data range)');
+    }
+
+    if (dosCountAfter > dosCountBefore) {
+      console.log('✓ DOS records have been restored to default state (more DOS dates shown)');
+    } else if (dosCountAfter === dosCountBefore) {
+      console.log('⚠ DOS records count remained the same after refresh');
+    }
+
+    console.log('\n--- Test Summary ---');
+    console.log(`✓ Date filters applied: ${fromDate} to ${toDate}`);
+    console.log(`✓ Filtered billing record count before refresh: ${filteredRowCount}`);
+    console.log(`✓ Filtered DOS count before refresh: ${dosCountBefore}`);
+    console.log('✓ Page refreshed successfully');
+    console.log('✓ Date filters reset to default state after refresh');
+    console.log(`✓ Billing record count after refresh: ${rowCountAfterRefresh}`);
+    console.log(`✓ DOS count after refresh: ${dosCountAfter}`);
+
+    console.log('\n========== TEST COMPLETED SUCCESSFULLY ==========\n');
+  });
 });
