@@ -330,6 +330,25 @@
       ],
       "expectedResult": "Billing records should be displayed from the selected From date onward",
       "testData": "Valid From date"
+    },
+    {
+      "id": "BILL_018",
+      "title": "Verify date filter does not break DOS panel selection",
+      "priority": "High",
+      "category": "Functional Positive",
+      "steps": [
+        "Login with valid credentials",
+        "Navigate to Dashboard",
+        "Close ChatBot",
+        "Click on Billing menu",
+        "Verify Billing page loads successfully",
+        "Click on Daily Billing button",
+        "Apply valid From and To date filters",
+        "Click Search button",
+        "Select a DOS date from DOS panel"
+      ],
+      "expectedResult": "DOS selection should still function correctly after date filtering",
+      "testData": "Valid date range and DOS"
     }
   ]
 }
