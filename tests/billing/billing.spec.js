@@ -1086,4 +1086,126 @@ test.describe('Billing Module - Smoke Tests', () => {
 
     console.log('\n========== TEST COMPLETED SUCCESSFULLY ==========\n');
   });
+
+  test('BILL_017 - Verify filtering billing records using only From date', async ({ page }) => {
+    console.log('\n========== BILL_017 TEST EXECUTION ==========');
+
+    // Step 1: Navigate to Billing page
+    console.log('\nStep 1: Navigating to Billing page...');
+    await billingPage.navigateToBilling();
+
+    // Verify we are on Billing page
+    let currentURL = page.url();
+    expect(currentURL).toContain('6/0');
+    console.log('✓ Successfully navigated to Billing page');
+
+    // Step 2: Click Daily Billing button
+    console.log('\nStep 2: Clicking Daily Billing button...');
+    await billingPage.clickDailyBillingButton();
+    await page.waitForTimeout(3000);
+
+    // Wait for page to fully load
+    await page.waitForLoadState('domcontentloaded');
+    console.log('✓ Successfully navigated to Daily Billing page');
+
+    // Step 3: Enter valid From date
+    console.log('\nStep 3: Entering valid From date...');
+    const fromDate = '09/16/2025';
+    await billingPage.setFromDate(fromDate);
+    console.log(`✓ From Date set to: ${fromDate}`);
+
+    // Step 4: Ensure To date is empty
+    console.log('\nStep 4: Ensuring To date field is empty...');
+    const toDateValue = await billingPage.getToDateValue();
+    console.log(`To Date field value: "${toDateValue}"`);
+
+    if (toDateValue !== '') {
+      console.log('To date has value, clearing it...');
+      await page.locator(billingPage.toDateInput).click();
+      await page.waitForTimeout(500);
+      await page.locator(billingPage.toDateInput).fill('');
+      await page.waitForTimeout(500);
+      const toDateAfterClear = await billingPage.getToDateValue();
+      expect(toDateAfterClear).toBe('');
+      console.log('✓ To date field cleared');
+    } else {
+      console.log('✓ To date field is already empty');
+    }
+
+    // Step 5: Click Search button
+    console.log('\nStep 5: Clicking Search button with only From date...');
+    await billingPage.clickSearchButton();
+    await page.waitForTimeout(3000);
+    await page.waitForLoadState('networkidle');
+    console.log('✓ Search completed');
+
+    // Step 6: Verify billing records are from the From date onward
+    console.log('\nStep 6: Verifying billing records are from the selected From date onward...');
+    const recordCount = await billingPage.getBillingGridRowCount();
+    console.log(`Billing record count: ${recordCount}`);
+
+    // Verify that records exist
+    expect(recordCount).toBeGreaterThan(0);
+    console.log('✓ Billing records are displayed');
+
+    // Verify dates are >= From date
+    console.log('\nStep 7: Validating all DOS dates are >= From date...');
+
+    // Get billing records from the container
+    const billingContainer = await page.locator('xpath=/html/body/ng-component/div/div/aeliusmd-billing-daily-board/div/div/div/div/aeliusmd-billing-injury-daily-board/div/div/div/div/div[1]/div');
+    const rows = await billingContainer.locator('table tbody tr, .p-datatable-tbody tr').all();
+
+    const fromDateObj = new Date(fromDate);
+    let dosHeadersChecked = 0;
+    let datesValid = 0;
+    let datesInvalid = 0;
+
+    // Check DOS date header rows
+    for (let i = 0; i < rows.length; i++) {
+      const cells = await rows[i].locator('td').all();
+
+      // Process DOS date header rows (single cell rows containing dates)
+      if (cells.length === 1) {
+        dosHeadersChecked++;
+
+        const dosText = await cells[0].textContent();
+        const dateMatch = dosText?.trim().match(/\d{2}\/\d{2}\/\d{4}/);
+
+        if (dateMatch) {
+          const recordDate = new Date(dateMatch[0]);
+
+          if (recordDate >= fromDateObj) {
+            datesValid++;
+            console.log(`✓ DOS date ${dateMatch[0]} is >= From date (${fromDate})`);
+          } else {
+            datesInvalid++;
+            console.log(`✗ DOS date ${dateMatch[0]} is < From date (${fromDate})`);
+          }
+        }
+      }
+    }
+
+    console.log(`\nTotal DOS dates checked: ${dosHeadersChecked}`);
+    console.log(`DOS dates >= From date: ${datesValid}`);
+    console.log(`DOS dates < From date: ${datesInvalid}`);
+
+    // Verify all dates are >= From date
+    expect(datesInvalid).toBe(0);
+    console.log('✓ All billing records are from the selected From date onward');
+
+    // Get sample records
+    const sampleRecords = await billingPage.getBillingRecordsSample();
+    console.log('\nSample billing records:');
+    sampleRecords.forEach((record, index) => {
+      console.log(`  Row ${index + 1}: ${record.substring(0, 100)}...`);
+    });
+
+    console.log('\n--- Test Summary ---');
+    console.log(`✓ From Date: ${fromDate}`);
+    console.log(`✓ To Date: (empty)`);
+    console.log(`✓ Filtered records: ${recordCount}`);
+    console.log(`✓ All records are from ${fromDate} onward`);
+
+    console.log('\n========== TEST COMPLETED SUCCESSFULLY ==========\n');
+  });
 });

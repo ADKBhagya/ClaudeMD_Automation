@@ -311,6 +311,25 @@
       ],
       "expectedResult": "System should load default billing records without date restriction",
       "testData": "none"
+    },
+    {
+      "id": "BILL_017",
+      "title": "Verify filtering billing records using only From date",
+      "priority": "Medium",
+      "category": "Functional Alternative",
+      "steps": [
+        "Login with valid credentials",
+        "Navigate to Dashboard",
+        "Close ChatBot",
+        "Click on Billing menu",
+        "Verify Billing page loads successfully",
+        "Click on Daily Billing button",
+        "Enter valid From date",
+        "Leave To date empty",
+        "Click Search button"
+      ],
+      "expectedResult": "Billing records should be displayed from the selected From date onward",
+      "testData": "Valid From date"
     }
   ]
 }
