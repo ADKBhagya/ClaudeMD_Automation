@@ -293,6 +293,24 @@
       ],
       "expectedResult": "Billing grid should reset and display default records when date filters are cleared",
       "testData": "none"
+    },
+    {
+      "id": "BILL_016",
+      "title": "Verify search without selecting any date loads default billing records",
+      "priority": "High",
+      "category": "Functional Positive",
+      "steps": [
+        "Login with valid credentials",
+        "Navigate to Dashboard",
+        "Close ChatBot",
+        "Click on Billing menu",
+        "Verify Billing page loads successfully",
+        "Click on Daily Billing button",
+        "Ensure From and To date fields are empty",
+        "Click Search button"
+      ],
+      "expectedResult": "System should load default billing records without date restriction",
+      "testData": "none"
     }
   ]
 }

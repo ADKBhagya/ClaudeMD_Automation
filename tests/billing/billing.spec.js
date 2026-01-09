@@ -1004,4 +1004,86 @@ test.describe('Billing Module - Smoke Tests', () => {
 
     console.log('\n========== TEST COMPLETED SUCCESSFULLY ==========\n');
   });
+
+  test('BILL_016 - Verify search without selecting any date loads default billing records', async ({ page }) => {
+    console.log('\n========== BILL_016 TEST EXECUTION ==========');
+
+    // Step 1: Navigate to Billing page
+    console.log('\nStep 1: Navigating to Billing page...');
+    await billingPage.navigateToBilling();
+
+    // Verify we are on Billing page
+    let currentURL = page.url();
+    expect(currentURL).toContain('6/0');
+    console.log('✓ Successfully navigated to Billing page');
+
+    // Step 2: Click Daily Billing button
+    console.log('\nStep 2: Clicking Daily Billing button...');
+    await billingPage.clickDailyBillingButton();
+    await page.waitForTimeout(3000);
+
+    // Wait for page to fully load
+    await page.waitForLoadState('domcontentloaded');
+    console.log('✓ Successfully navigated to Daily Billing page');
+
+    // Step 3: Ensure From and To date fields are empty
+    console.log('\nStep 3: Ensuring From and To date fields are empty...');
+    const fromDateValue = await billingPage.getFromDateValue();
+    const toDateValue = await billingPage.getToDateValue();
+    console.log(`From Date field value: "${fromDateValue}"`);
+    console.log(`To Date field value: "${toDateValue}"`);
+
+    // If fields have values, clear them
+    if (fromDateValue !== '' || toDateValue !== '') {
+      console.log('Date fields contain values, clearing them...');
+      await billingPage.clickDateRangeClearButton();
+      await page.waitForTimeout(1000);
+
+      const fromDateAfterClear = await billingPage.getFromDateValue();
+      const toDateAfterClear = await billingPage.getToDateValue();
+      console.log(`From Date after clear: "${fromDateAfterClear}"`);
+      console.log(`To Date after clear: "${toDateAfterClear}"`);
+
+      expect(fromDateAfterClear).toBe('');
+      expect(toDateAfterClear).toBe('');
+      console.log('✓ Date fields are now empty');
+    } else {
+      console.log('✓ Date fields are already empty');
+    }
+
+    // Step 4: Click Search button without any date filters
+    console.log('\nStep 4: Clicking Search button without any date filters...');
+    await billingPage.clickSearchButton();
+    await page.waitForTimeout(3000);
+    await page.waitForLoadState('networkidle');
+    console.log('✓ Search completed');
+
+    // Step 5: Verify default billing records are loaded
+    console.log('\nStep 5: Verifying default billing records are loaded...');
+    const recordCount = await billingPage.getBillingGridRowCount();
+    console.log(`Billing record count (without date filters): ${recordCount}`);
+
+    // Verify that records are loaded
+    expect(recordCount).toBeGreaterThan(0);
+    console.log('✓ Default billing records are loaded');
+
+    // Get sample records
+    const sampleRecords = await billingPage.getBillingRecordsSample();
+    console.log('Sample billing records:');
+    sampleRecords.forEach((record, index) => {
+      console.log(`  Row ${index + 1}: ${record.substring(0, 100)}...`);
+    });
+
+    // Verify system is responsive and no errors occurred
+    console.log('\nStep 6: Verifying system is responsive...');
+    const isPageResponsive = await page.locator('body').isVisible({ timeout: 5000 }).catch(() => false);
+    expect(isPageResponsive).toBeTruthy();
+    console.log('✓ System is responsive');
+
+    console.log('\n--- Test Summary ---');
+    console.log(`✓ Search without date filters loaded ${recordCount} billing records`);
+    console.log('✓ System successfully loads default billing records without date restriction');
+
+    console.log('\n========== TEST COMPLETED SUCCESSFULLY ==========\n');
+  });
 });
