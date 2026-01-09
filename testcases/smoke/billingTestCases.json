@@ -349,6 +349,25 @@
       ],
       "expectedResult": "DOS selection should still function correctly after date filtering",
       "testData": "Valid date range and DOS"
+    },
+    {
+      "id": "BILL_019",
+      "title": "Verify date filtration persists while switching Injury sub-tabs",
+      "priority": "High",
+      "category": "Functional Positive",
+      "steps": [
+        "Login with valid credentials",
+        "Navigate to Dashboard",
+        "Close ChatBot",
+        "Click on Billing menu",
+        "Verify Billing page loads successfully",
+        "Click on Daily Billing button",
+        "Apply valid From and To dates",
+        "Click Search button",
+        "Switch between Injury New, Injury PT, and Injury Recheck tabs"
+      ],
+      "expectedResult": "Date filtration should persist across Injury sub-tabs",
+      "testData": "Valid date range"
     }
   ]
 }

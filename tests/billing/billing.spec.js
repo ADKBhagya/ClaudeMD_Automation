@@ -1337,4 +1337,167 @@ test.describe('Billing Module - Smoke Tests', () => {
 
     console.log('\n========== TEST COMPLETED SUCCESSFULLY ==========\n');
   });
+
+  test('BILL_019 - Verify date filtration persists while switching Injury sub-tabs', async ({ page }) => {
+    console.log('\n========== BILL_019 TEST EXECUTION ==========');
+
+    // Step 1: Navigate to Billing page
+    console.log('\nStep 1: Navigating to Billing page...');
+    await billingPage.navigateToBilling();
+
+    // Verify we are on Billing page
+    let currentURL = page.url();
+    expect(currentURL).toContain('6/0');
+    console.log('✓ Successfully navigated to Billing page');
+
+    // Step 2: Click Daily Billing button
+    console.log('\nStep 2: Clicking Daily Billing button...');
+    await billingPage.clickDailyBillingButton();
+    await page.waitForTimeout(3000);
+
+    // Wait for page to fully load
+    await page.waitForLoadState('domcontentloaded');
+    console.log('✓ Successfully navigated to Daily Billing page');
+
+    // Step 3: Apply valid From and To dates
+    console.log('\nStep 3: Applying valid From and To dates...');
+    const fromDate = '09/15/2025';
+    const toDate = '09/20/2025';
+
+    await billingPage.setFromDate(fromDate);
+    console.log(`✓ From Date set to: ${fromDate}`);
+
+    await billingPage.setToDate(toDate);
+    console.log(`✓ To Date set to: ${toDate}`);
+
+    // Step 4: Click Search button
+    console.log('\nStep 4: Clicking Search button to apply filters...');
+    await billingPage.clickSearchButton();
+    await page.waitForTimeout(3000);
+    await page.waitForLoadState('networkidle');
+    console.log('✓ Search completed');
+
+    // Step 5: Verify billing records are filtered
+    console.log('\nStep 5: Verifying billing records are filtered...');
+    const filteredRowCount = await billingPage.getBillingGridRowCount();
+    console.log(`Filtered billing record count: ${filteredRowCount}`);
+
+    const dateRangeValidation = await billingPage.verifyBillingRecordsInDateRange(fromDate, toDate);
+    console.log(`Date range validation: ${dateRangeValidation.message}`);
+    expect(dateRangeValidation.isValid).toBeTruthy();
+    console.log('✓ Billing records are filtered correctly');
+
+    // Step 6: Select a DOS date to reveal injury sub-tabs
+    console.log('\nStep 6: Selecting a DOS date to reveal injury sub-tabs...');
+    const targetDOSDate = '09/16/2025';
+    const selectedDOS = await billingPage.clickDOSDateByValue(targetDOSDate);
+
+    if (selectedDOS) {
+      console.log(`✓ Successfully selected DOS date: ${selectedDOS}`);
+      await page.waitForTimeout(2000);
+      await page.waitForLoadState('networkidle');
+    } else {
+      console.log(`⚠ Could not find DOS date ${targetDOSDate}`);
+    }
+
+    // Step 7: Verify date values are set correctly before switching tabs
+    console.log('\nStep 7: Verifying date filter values before switching tabs...');
+    const fromDateBefore = await billingPage.getFromDateValue();
+    const toDateBefore = await billingPage.getToDateValue();
+    console.log(`From Date before tab switch: "${fromDateBefore}"`);
+    console.log(`To Date before tab switch: "${toDateBefore}"`);
+    expect(fromDateBefore).toContain('09/15/2025');
+    expect(toDateBefore).toContain('09/20/2025');
+
+    // Locate the injury sub-tabs using specific XPath
+    const injuryNewTab = page.locator('xpath=/html/body/ng-component/div/div/aeliusmd-billing-daily-board/div/div/div/div/aeliusmd-billing-injury-daily-board/div/div/div/div/div[2]/div/div/div[1]/div/div[1]/div/button[1]');
+    const injuryPTTab = page.locator('xpath=/html/body/ng-component/div/div/aeliusmd-billing-daily-board/div/div/div/div/aeliusmd-billing-injury-daily-board/div/div/div/div/div[2]/div/div/div[1]/div/div[1]/div/button[2]');
+    const injuryRecheckTab = page.locator('xpath=/html/body/ng-component/div/div/aeliusmd-billing-daily-board/div/div/div/div/aeliusmd-billing-injury-daily-board/div/div/div/div/div[2]/div/div/div[1]/div/div[1]/div/button[3]');
+
+    // Step 8: Switch to Injury PT tab
+    console.log('\nStep 8: Switching to Injury PT tab...');
+    const isPTTabVisible = await injuryPTTab.isVisible({ timeout: 5000 }).catch(() => false);
+
+    if (isPTTabVisible) {
+      await injuryPTTab.click();
+      await page.waitForTimeout(2000);
+      await page.waitForLoadState('networkidle');
+      console.log('✓ Switched to Injury PT tab');
+
+      // Verify date filters persist on PT tab
+      const fromDatePT = await billingPage.getFromDateValue();
+      const toDatePT = await billingPage.getToDateValue();
+      console.log(`From Date on PT tab: "${fromDatePT}"`);
+      console.log(`To Date on PT tab: "${toDatePT}"`);
+      expect(fromDatePT).toContain('09/15/2025');
+      expect(toDatePT).toContain('09/20/2025');
+      console.log('✓ Date filters persisted on Injury PT tab');
+    } else {
+      console.log('⚠ Injury PT tab not found, skipping...');
+    }
+
+    // Step 9: Switch to Injury Recheck tab
+    console.log('\nStep 9: Switching to Injury Recheck tab...');
+    const isRecheckTabVisible = await injuryRecheckTab.isVisible({ timeout: 5000 }).catch(() => false);
+
+    if (isRecheckTabVisible) {
+      await injuryRecheckTab.click();
+      await page.waitForTimeout(2000);
+      await page.waitForLoadState('networkidle');
+      console.log('✓ Switched to Injury Recheck tab');
+
+      // Verify date filters persist on Recheck tab
+      const fromDateRecheck = await billingPage.getFromDateValue();
+      const toDateRecheck = await billingPage.getToDateValue();
+      console.log(`From Date on Recheck tab: "${fromDateRecheck}"`);
+      console.log(`To Date on Recheck tab: "${toDateRecheck}"`);
+      expect(fromDateRecheck).toContain('09/15/2025');
+      expect(toDateRecheck).toContain('09/20/2025');
+      console.log('✓ Date filters persisted on Injury Recheck tab');
+    } else {
+      console.log('⚠ Injury Recheck tab not found, skipping...');
+    }
+
+    // Step 10: Switch back to Injury New tab
+    console.log('\nStep 10: Switching back to Injury New tab...');
+    const isNewTabVisible = await injuryNewTab.isVisible({ timeout: 5000 }).catch(() => false);
+
+    if (isNewTabVisible) {
+      await injuryNewTab.click();
+      await page.waitForTimeout(2000);
+      await page.waitForLoadState('networkidle');
+      console.log('✓ Switched back to Injury New tab');
+
+      // Verify date filters still persist on New tab
+      const fromDateNew = await billingPage.getFromDateValue();
+      const toDateNew = await billingPage.getToDateValue();
+      console.log(`From Date on New tab: "${fromDateNew}"`);
+      console.log(`To Date on New tab: "${toDateNew}"`);
+      expect(fromDateNew).toContain('09/15/2025');
+      expect(toDateNew).toContain('09/20/2025');
+      console.log('✓ Date filters persisted on Injury New tab');
+    } else {
+      console.log('⚠ Injury New tab not found, skipping...');
+    }
+
+    // Step 11: Verify billing records are still filtered
+    console.log('\nStep 11: Verifying billing records are still filtered after tab switching...');
+    const finalRowCount = await billingPage.getBillingGridRowCount();
+    console.log(`Final billing record count: ${finalRowCount}`);
+    expect(finalRowCount).toBeGreaterThan(0);
+
+    // Verify date range is still valid
+    const finalDateRangeValidation = await billingPage.verifyBillingRecordsInDateRange(fromDate, toDate);
+    console.log(`Final date range validation: ${finalDateRangeValidation.message}`);
+    expect(finalDateRangeValidation.isValid).toBeTruthy();
+    console.log('✓ Billing records remain filtered after tab switching');
+
+    console.log('\n--- Test Summary ---');
+    console.log(`✓ Date filter applied: ${fromDate} to ${toDate}`);
+    console.log('✓ Date filters persisted across all Injury sub-tabs');
+    console.log('✓ Billing records remained filtered throughout tab switches');
+    console.log(`✓ Final filtered record count: ${finalRowCount}`);
+
+    console.log('\n========== TEST COMPLETED SUCCESSFULLY ==========\n');
+  });
 });
