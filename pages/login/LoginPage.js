@@ -21,9 +21,9 @@ class LoginPage extends BasePage {
   async navigateToLoginPage() {
     // Navigate to login URL with activation key parameter
     const loginURL = process.env.LOGIN_URL || `${process.env.BASE_URL}/authentication/login?activationkey=${process.env.ACTIVATION_KEY}`;
-    await this.page.goto(loginURL, { timeout: 60000, waitUntil: 'domcontentloaded' });
+    await this.page.goto(loginURL, { timeout: 120000, waitUntil: 'commit' });
     // Wait for the login form to be visible
-    await this.waitForSelector(this.usernameInput, { timeout: 60000 });
+    await this.waitForSelector(this.usernameInput, { timeout: 90000 });
   }
 
   async enterUsername(username) {

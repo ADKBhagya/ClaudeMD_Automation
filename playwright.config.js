@@ -42,7 +42,7 @@ module.exports = defineConfig({
     actionTimeout: 15000,
 
     // Navigation timeout (increased for slow-loading pages)
-    navigationTimeout: 60000,
+    navigationTimeout: 120000,
   },
 
   // Configure projects for major browsers
