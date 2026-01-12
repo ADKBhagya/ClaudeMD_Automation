@@ -193,5 +193,22 @@
     "reports": "Reports",
     "adjustments": "Adjustments",
     "refunds": "Refunds"
+  },
+  "visitTypes": {
+    "wni": "WNI",
+    "wi": "WI",
+    "wr": "WR",
+    "pt": "PT",
+    "recheck": "Recheck"
+  },
+  "batchFilters": {
+    "injuryNew": "Injury New",
+    "injuryPT": "Injury PT",
+    "injuryRecheck": "Injury Recheck"
+  },
+  "bill_022_testData": {
+    "batchType": "Injury New",
+    "expectedVisitType": "WNI",
+    "description": "Test data for BILL_022 - Verify Injury New batch displays WNI visit type records"
   }
 }

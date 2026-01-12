@@ -405,6 +405,25 @@
       ],
       "expectedResult": "Batches filter buttons should be visible and accessible",
       "testData": "none"
+    },
+    {
+      "id": "BILL_022",
+      "title": "Verify Injury New batch displays WNI visit type records",
+      "priority": "High",
+      "category": "Functional Positive",
+      "steps": [
+        "Login with valid credentials",
+        "Navigate to Dashboard",
+        "Close ChatBot",
+        "Click on Billing menu",
+        "Verify Billing page loads successfully",
+        "Click on Daily Billing button",
+        "Navigate to Daily Billing - Injury page",
+        "Click on Injury New batch",
+        "Review Visit column values"
+      ],
+      "expectedResult": "All displayed records should have Visit Type = WNI",
+      "testData": "Visit = WNI"
     }
   ]
 }

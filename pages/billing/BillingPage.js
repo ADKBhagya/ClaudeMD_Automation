@@ -571,6 +571,158 @@ class BillingPage extends BasePage {
       return { isValid: false, recordCount: 0, message: error.message };
     }
   }
+
+  async clickInjuryNewBatchButton() {
+    try {
+      await this.waitForTimeout(2000);
+      console.log('Attempting to click Injury New batch button...');
+
+      // Look for Injury New batch button - trying multiple possible selectors
+      const injuryNewBatchSelectors = [
+        'button:has-text("Injury New")',
+        'button:has-text("New")',
+        'text=/injury.*new/i',
+        '[class*="injury"][class*="new"]',
+        'div:has-text("Injury New")',
+        '.batch-filter button:has-text("New")',
+        '[aria-label*="Injury New"]',
+        '[title*="Injury New"]'
+      ];
+
+      for (const selector of injuryNewBatchSelectors) {
+        try {
+          const element = this.page.locator(selector).first();
+          const isVisible = await element.isVisible({ timeout: 2000 }).catch(() => false);
+          if (isVisible) {
+            console.log(`✓ Found Injury New batch button using selector: ${selector}`);
+            await element.click();
+            await this.waitForTimeout(2000);
+            console.log('✓ Clicked on Injury New batch button');
+            return { success: true, selector };
+          }
+        } catch (error) {
+          // Continue to next selector
+        }
+      }
+
+      console.log('⚠ Injury New batch button not found with any selector');
+      return { success: false, selector: null };
+    } catch (error) {
+      console.log(`Error clicking Injury New batch button: ${error.message}`);
+      return { success: false, selector: null, error: error.message };
+    }
+  }
+
+  async getVisitTypeValues() {
+    try {
+      await this.waitForTimeout(2000);
+      console.log('Retrieving Visit Type values from billing records...');
+
+      // Get all billing records from the grid
+      const billingContainer = await this.page.locator('xpath=/html/body/ng-component/div/div/aeliusmd-billing-daily-board/div/div/div/div/aeliusmd-billing-injury-daily-board/div/div/div/div/div[1]/div');
+      const rows = await billingContainer.locator('table tbody tr, .p-datatable-tbody tr').all();
+
+      console.log(`Total rows found: ${rows.length}`);
+
+      let recordsChecked = 0;
+      let visitTypeValues = [];
+
+      // Iterate through rows to check Visit Type column
+      for (let i = 0; i < rows.length; i++) {
+        const cells = await rows[i].locator('td').all();
+
+        // Skip DOS date header rows (single cell rows)
+        if (cells.length <= 1) {
+          continue;
+        }
+
+        recordsChecked++;
+
+        // Try to find the Visit Type column
+        // Assuming Visit Type might be in different column positions, we'll check all cells
+        for (let j = 0; j < cells.length; j++) {
+          const cellText = await cells[j].textContent();
+          const cellTextTrimmed = cellText?.trim();
+
+          // Check if this cell contains visit type information
+          if (cellTextTrimmed === 'WNI' || cellTextTrimmed === 'WI' || cellTextTrimmed === 'WR' || cellTextTrimmed === 'PT' || cellTextTrimmed === 'Recheck') {
+            visitTypeValues.push({
+              rowIndex: i,
+              visitType: cellTextTrimmed
+            });
+            break;
+          }
+        }
+      }
+
+      return {
+        success: true,
+        recordsChecked,
+        visitTypeValues,
+        uniqueVisitTypes: [...new Set(visitTypeValues.map(v => v.visitType))]
+      };
+    } catch (error) {
+      console.log(`Error getting Visit Type values: ${error.message}`);
+      return {
+        success: false,
+        recordsChecked: 0,
+        visitTypeValues: [],
+        uniqueVisitTypes: [],
+        error: error.message
+      };
+    }
+  }
+
+  async verifyAllRecordsHaveVisitType(expectedVisitType) {
+    try {
+      await this.waitForTimeout(2000);
+      console.log(`Verifying all records have Visit Type = ${expectedVisitType}...`);
+
+      const result = await this.getVisitTypeValues();
+
+      if (!result.success) {
+        return {
+          isValid: false,
+          message: `Error retrieving visit types: ${result.error}`,
+          recordsChecked: 0,
+          recordsWithExpectedType: 0,
+          recordsWithDifferentType: 0
+        };
+      }
+
+      const recordsWithExpectedType = result.visitTypeValues.filter(v => v.visitType === expectedVisitType).length;
+      const recordsWithDifferentType = result.visitTypeValues.filter(v => v.visitType !== expectedVisitType).length;
+
+      console.log(`Records checked: ${result.recordsChecked}`);
+      console.log(`Records with Visit Type = ${expectedVisitType}: ${recordsWithExpectedType}`);
+      console.log(`Records with Visit Type ≠ ${expectedVisitType}: ${recordsWithDifferentType}`);
+
+      if (result.uniqueVisitTypes.length > 0) {
+        console.log(`Unique Visit Type values found: ${result.uniqueVisitTypes.join(', ')}`);
+      }
+
+      return {
+        isValid: recordsWithDifferentType === 0 && recordsWithExpectedType > 0,
+        message: recordsWithDifferentType === 0 && recordsWithExpectedType > 0
+          ? `All records have Visit Type = ${expectedVisitType}`
+          : `Found ${recordsWithDifferentType} records with Visit Type ≠ ${expectedVisitType}`,
+        recordsChecked: result.recordsChecked,
+        recordsWithExpectedType,
+        recordsWithDifferentType,
+        uniqueVisitTypes: result.uniqueVisitTypes,
+        visitTypeValues: result.visitTypeValues
+      };
+    } catch (error) {
+      console.log(`Error verifying Visit Type: ${error.message}`);
+      return {
+        isValid: false,
+        message: error.message,
+        recordsChecked: 0,
+        recordsWithExpectedType: 0,
+        recordsWithDifferentType: 0
+      };
+    }
+  }
 }
 
 module.exports = BillingPage;
